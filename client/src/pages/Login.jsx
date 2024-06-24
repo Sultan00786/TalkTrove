@@ -4,6 +4,7 @@ import Paper from "@mui/material/Paper";
 import { Avatar, Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import toast from "react-hot-toast";
 
 function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,9 +19,29 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  const handlerFileChange = (data) => {
+  const handlerFileChange = (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      toast("Please Upload image", {
+        icon: "👏",
+      });
+    } else {
+      const reader = new FileReader();
+      // console.log(reader);
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setFilePath(reader.result);
+      };
+    }
+  };
 
-  }
+  const onSubmitLogin = (event) => {
+    event.preventDefault();
+  };
+
+  const onSubmitSignUp = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <Container
@@ -30,30 +51,42 @@ function Login() {
       }}
       className=" flex h-full justify-center items-center "
     >
-      <div className=" w-[380px] mx-auto my-auto">
-        <Paper elevation={3}>
-          <div className="  flex flex-col p-7 gap-5">
+      <div className=" w-[380px] rounded-md mx-auto my-auto">
+        <Paper elevation={2}>
+          <div className=" flex flex-col rounded-md p-7 gap-5">
             <h1 className=" w-full text-center text-3xl text-zinc-500 font-semibold">
               {isLogin ? "Login" : "Sign Up"}
             </h1>
 
             {isLogin ? (
               <div>
-                <form>
+                <form onSubmit={handleSubmit(onSubmitLogin)}>
                   <div className="flex flex-col gap-3">
                     <TextField
                       id="Username"
                       name="Username"
                       label="Username *"
                       className=" w-full"
+                      {...register("Username", { required: true })}
                     />
+                    {errors.Username && (
+                      <p className=" text-red-700 text-xs -mt-2 text-end">
+                        Please enter UserName
+                      </p>
+                    )}
 
                     <TextField
                       id="Password"
                       name="Password"
                       label="Password *"
                       type="password"
+                      {...register("Password", { required: true })}
                     />
+                    {errors.Password && (
+                      <p className=" text-red-700 text-xs -mt-2 text-end">
+                        Please enter Password
+                      </p>
+                    )}
 
                     <Button
                       variant="contained"
@@ -72,16 +105,23 @@ function Login() {
               </div>
             ) : (
               <div>
-                <form>
+                <form onSubmit={handleSubmit(onSubmitSignUp)}>
                   <div className="flex flex-col gap-3">
                     <div className=" relative flex flex-col items-center">
-                      <Avatar
-                        src={filePath}
+                      <Paper
+                        elevation={4}
                         sx={{
-                          width: 120,
-                          height: 120,
+                          borderRadius: 100,
                         }}
-                      />
+                      >
+                        <Avatar
+                          src={filePath ? filePath : ""}
+                          sx={{
+                            width: 120,
+                            height: 120,
+                          }}
+                        />
+                      </Paper>
                       <CameraAltIcon
                         fontSize="large"
                         className=" absolute right-[100px] bottom-0 bg-black text-white rounded-full p-[5px] opacity-30 hover:opacity-60 cursor-pointer"
@@ -100,22 +140,54 @@ function Login() {
                       />
                     </div>
 
-                    <TextField id="Name" name="Name" label="Name *" />
+                    <TextField
+                      id="Name"
+                      name="Name"
+                      label="Name *"
+                      {...register("Name", { required: true })}
+                    />
+                    {errors.Name && (
+                      <p className=" text-red-700 text-xs -mt-2 text-end">
+                        Please enter Name
+                      </p>
+                    )}
 
-                    <TextField id="Bio" name="Bio" label="Bio *" />
+                    <TextField
+                      id="Bio"
+                      name="Bio"
+                      label="Bio *"
+                      {...register("Bio", { required: true })}
+                    />
+                    {errors.Bio && (
+                      <p className=" text-red-700 text-xs -mt-2 text-end">
+                        Please enter Bio
+                      </p>
+                    )}
 
                     <TextField
                       id="Username"
                       name="Username"
                       label="Username *"
+                      {...register("Username", { required: true })}
                     />
+                    {errors.Username && (
+                      <p className=" text-red-700 text-xs -mt-2 text-end">
+                        Please enter UserName
+                      </p>
+                    )}
 
                     <TextField
                       id="Password"
                       name="Password"
                       label="Password *"
                       type="password"
+                      {...register("Password", { required: true })}
                     />
+                    {errors.Password && (
+                      <p className=" text-red-700 text-xs -mt-2 text-end">
+                        Please enter Password
+                      </p>
+                    )}
 
                     <Button
                       variant="contained"
@@ -123,7 +195,7 @@ function Login() {
                       className=" hover:bg-sky-700"
                       type="submit"
                     >
-                      {isLogin ? "LOGIN" : "SIGN UP"}
+                      SIGN UP
                     </Button>
 
                     <p className=" text-center font-semibold text-zinc-500">
