@@ -32,7 +32,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<Loader />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
