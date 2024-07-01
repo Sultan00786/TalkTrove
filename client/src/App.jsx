@@ -14,27 +14,27 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 function App() {
   const user = true; // to do
   return (
-    <div className=" bg-sky-100 w-full h-[100vh]">
+    <div className=" bg-gray-200 w-full min-h-[100vh]">
       <BrowserRouter>
         <Toaster position="top-right" reverseOrder={true} />
-        <Routes>
-          <Suspense fallback={<Loader />}>
+        <Suspense fallback={<Loader />}>
+          <Routes>
             <Route element={<ProtectedRoute user={user} />}>
               <Route path="/" element={<Home />} />
               <Route path="/chat/:chatId" element={<Chat />} />
               <Route path="/group" element={<Group />} />
             </Route>
-          </Suspense>
-          <Route
-            path="/login"
-            element={
-              <ProtectedRoute user={!user} redirect="/">
-                <Login />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route
+              path="/login"
+              element={
+                <ProtectedRoute user={!user} redirect="/">
+                  <Login />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Loader />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </div>
   );
