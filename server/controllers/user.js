@@ -1,8 +1,10 @@
 import { compare } from "bcrypt";
 import { User } from "../models/user.js";
 import { sendToken } from "../utils/feature.js";
+import { TryCatch } from "../middlewares/error.js";
+import { ErrorHnadle } from "../utils/utility.js";
 
-const newUser = async (req, res) => {
+const newUser = TryCatch(async (req, res, next) => {
   const { name, username, password, bio } = req.body;
 
   const avatar = {
@@ -18,20 +20,21 @@ const newUser = async (req, res) => {
   });
 
   sendToken(res, newUser, 201, "User Created!!!");
-};
+});
 
-async function Login(req, res) {
+const login = TryCatch(async (req, res, next) => {
   const { username, password } = req.body;
 
-  console.log(req.body);
-
   const user = await User.findOne({ username: username }).select("+password");
-  if (!user) return res.status(400).json({ error: "Invalid UserName" });
+  if (!user) return next(new ErrorHnadle("Invalid Username", 401));
 
   const isMatchPwd = compare(password, user.password);
-  if (!isMatchPwd) res.status(400).json({ error: "Invalid Password" });
+  if (!isMatchPwd) console.log("nope");
+  return next(new ErrorHnadle("Invalid Password", 401));
 
   sendToken(res, user, 200, "Login Successful!!!");
-}
+});
 
-export { newUser, Login };
+const getMyProfile = async (req, res, next) => {};
+
+export { newUser, login, getMyProfile };
