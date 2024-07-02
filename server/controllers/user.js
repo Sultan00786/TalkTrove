@@ -29,12 +29,19 @@ const login = TryCatch(async (req, res, next) => {
   if (!user) return next(new ErrorHnadle("Invalid Username", 401));
 
   const isMatchPwd = compare(password, user.password);
-  if (!isMatchPwd) console.log("nope");
-  return next(new ErrorHnadle("Invalid Password", 401));
+  if (!isMatchPwd) return next(new ErrorHnadle("Invalid Password", 401));
 
   sendToken(res, user, 200, "Login Successful!!!");
 });
 
-const getMyProfile = async (req, res, next) => {};
+const getMyProfile = TryCatch(async (req, res, next) => {
+  const user = await User.findById(req.userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Get My Profile Successful!!!",
+    data: user,
+  });
+});
 
 export { newUser, login, getMyProfile };
