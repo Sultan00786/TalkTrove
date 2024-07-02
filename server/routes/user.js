@@ -1,8 +1,11 @@
 import express from "express";
+import { login, newUser } from "../controllers/user.js";
 const userRouter = express.Router();
 
-userRouter.get("/", (req, res) => {
-  res.json({ message: "Hello World!" });
-});
+// ################################## USER ROUTES ###################################
+// upload avatar for the user
+userRouter.post("/new", newUser);
+// login route for the user
+userRouter.post("/login", login);
 
 export default userRouter;
