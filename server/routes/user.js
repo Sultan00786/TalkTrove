@@ -1,5 +1,5 @@
 import express from "express";
-import { login, newUser } from "../controllers/user.js";
+import { Login, newUser } from "../controllers/user.js";
 import { singleAvatar } from "../middlewares/multer.js";
 const userRouter = express.Router();
 
@@ -7,6 +7,6 @@ const userRouter = express.Router();
 // upload avatar for the user
 userRouter.post("/new", singleAvatar, newUser);
 // login route for the user
-userRouter.post("/login", login);
+userRouter.post("/login", Login);
 
 export default userRouter;

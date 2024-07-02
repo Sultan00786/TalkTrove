@@ -1,7 +1,5 @@
 import express from "express";
 import userRouter from "./routes/user.js";
-import { login, newUser } from "./controllers/user.js";
-import { connect } from "mongoose";
 import { connectDB } from "./utils/feature.js";
 import dotenv from "dotenv";
 
@@ -15,7 +13,7 @@ const mongoDbUrl = process.env.MONGODB_URI;
 connectDB(mongoDbUrl);
 
 const app = express();
-
+app.use(express.json());
 app.use("/user", userRouter);
 
 app.get("/", (req, res) => {
