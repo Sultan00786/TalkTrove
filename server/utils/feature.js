@@ -22,7 +22,7 @@ const connectDB = (url) => {
 const sendToken = (res, user, code, message) => {
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
 
-  return res.status(code).cookie("ChatApp-token", token, cookieOptions).json({
+  return res.status(code).cookie("ChatApp_token", token, cookieOptions).json({
     success: true,
     message: message,
     userData: user,
@@ -30,4 +30,8 @@ const sendToken = (res, user, code, message) => {
   });
 };
 
-export { connectDB, sendToken };
+const emitEvent = (req, event, users, data) => {
+  console.log("Event name is ", event);
+};
+
+export { connectDB, sendToken, emitEvent };

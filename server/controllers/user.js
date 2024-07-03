@@ -4,6 +4,13 @@ import { sendToken } from "../utils/feature.js";
 import { TryCatch } from "../middlewares/error.js";
 import { ErrorHnadle } from "../utils/utility.js";
 
+const cookieOptions = {
+  maxAge: 15 * 24 * 60 * 60 * 1000,
+  sameSite: "none",
+  httpOnly: true,
+  secure: true,
+};
+
 const newUser = TryCatch(async (req, res, next) => {
   const { name, username, password, bio } = req.body;
 
@@ -29,12 +36,36 @@ const login = TryCatch(async (req, res, next) => {
   if (!user) return next(new ErrorHnadle("Invalid Username", 401));
 
   const isMatchPwd = compare(password, user.password);
-  if (!isMatchPwd) console.log("nope");
-  return next(new ErrorHnadle("Invalid Password", 401));
+  if (!isMatchPwd) return next(new ErrorHnadle("Invalid Password", 401));
 
   sendToken(res, user, 200, "Login Successful!!!");
 });
 
-const getMyProfile = async (req, res, next) => {};
+const getMyProfile = TryCatch(async (req, res, next) => {
+  const user = await User.findById(req.userId);
 
-export { newUser, login, getMyProfile };
+  res.status(200).json({
+    success: true,
+    message: "Get My Profile Successful!!!",
+    data: user,
+  });
+});
+
+const logout = TryCatch(async (req, res, next) => {
+  return res
+    .status(200)
+    .cookie("ChatApp_token", "", { ...cookieOptions, maxAge: 0 })
+    .json({ success: true, message: "Logged Out Successfully!!!" });
+});
+
+const searchUser = TryCatch(async (req, res, next) => {
+  const { name } = req.query;
+
+  return res.status(200).json({
+    success: true,
+    message: "Search User Successful!!!",
+    data: name,
+  });
+});
+
+export { newUser, login, getMyProfile, logout, searchUser };
