@@ -4,6 +4,13 @@ import { sendToken } from "../utils/feature.js";
 import { TryCatch } from "../middlewares/error.js";
 import { ErrorHnadle } from "../utils/utility.js";
 
+const cookieOptions = {
+  maxAge: 15 * 24 * 60 * 60 * 1000,
+  sameSite: "none",
+  httpOnly: true,
+  secure: true,
+};
+
 const newUser = TryCatch(async (req, res, next) => {
   const { name, username, password, bio } = req.body;
 
@@ -44,4 +51,21 @@ const getMyProfile = TryCatch(async (req, res, next) => {
   });
 });
 
-export { newUser, login, getMyProfile };
+const logout = TryCatch(async (req, res, next) => {
+  return res
+    .status(200)
+    .cookie("ChatApp_token", "", { ...cookieOptions, maxAge: 0 })
+    .json({ success: true, message: "Logged Out Successfully!!!" });
+});
+
+const searchUser = TryCatch(async (req, res, next) => {
+  const { name } = req.query;
+
+  return res.status(200).json({
+    success: true,
+    message: "Search User Successful!!!",
+    data: name,
+  });
+});
+
+export { newUser, login, getMyProfile, logout, searchUser };
