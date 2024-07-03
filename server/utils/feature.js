@@ -30,4 +30,8 @@ const sendToken = (res, user, code, message) => {
   });
 };
 
-export { connectDB, sendToken };
+const emitEvent = (req, event, users, data) => {
+  console.log("Event name is ", event);
+};
+
+export { connectDB, sendToken, emitEvent };
