@@ -1,6 +1,7 @@
 import { ALERT, REFETCH_CHATS } from "../constants/events.js";
 import { TryCatch } from "../middlewares/error.js";
 import { Chat } from "../models/chat.js";
+import { User } from "../models/user.js";
 import { emitEvent } from "../utils/feature.js";
 import { ErrorHnadle } from "../utils/utility.js";
 
@@ -92,7 +93,45 @@ const getMyGroups = TryCatch(async (req, res, next) => {
 });
 
 const addMembers = TryCatch(async (req, res, next) => {
-  
-})
+  const { chatId, members } = req.body;
 
-export { newGroup, getMyChats, getMyGroups, addMembers};
+  const chat = await Chat.findById(chatId);
+
+  if (!chat) return next(new ErrorHnadle("Chat not found", 404));
+  if (!chat.groupChat)
+    return next(new ErrorHnadle("This is not a group chat", 400));
+  if (chat.creator.toString() !== req.userId.toString())
+    return next(
+      new ErrorHnadle("Only creator of group can add a new members", 400)
+    );
+
+  const newMemberPromise = members.map((user) =>
+    User.findById(user._id, "name")
+  );
+
+  const allNewMemberPromisDone = await Promise.all(newMemberPromise);
+  const allNewMember = allNewMemberPromisDone.map((user) => user._id);
+  chat.members.push(...allNewMember);
+
+  if (chat.members.length > 100)
+    next(new ErrorHnadle("Maximum members limit reached", 400));
+  await chat.save();
+
+  const allNewMemberName = allNewMember.map((user) => user.name).join(",");
+
+  emitEvent(
+    req,
+    ALERT,
+    chat.members,
+    `${allNewMemberName} added to members of group chat`
+  );
+
+  return res
+    .status(200)
+    .json({
+      success: true,
+      message: "New member added successfully in the group",
+    });
+});
+
+export { newGroup, getMyChats, getMyGroups, addMembers };
