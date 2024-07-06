@@ -3,6 +3,7 @@ import { TryCatch } from "../middlewares/error.js";
 import { Chat } from "../models/chat.js";
 import { User } from "../models/user.js";
 import { emitEvent } from "../utils/feature.js";
+import { getRandomMemberId } from "../utils/fuction.js";
 import { ErrorHnadle } from "../utils/utility.js";
 
 const newGroup = TryCatch(async (req, res, next) => {
@@ -97,6 +98,8 @@ const addMembers = TryCatch(async (req, res, next) => {
 
   const chat = await Chat.findById(chatId);
 
+  if (!members || members.length === 0)
+    return next(new ErrorHnadle("Invaliad members", 403));
   if (!chat) return next(new ErrorHnadle("Chat not found", 404));
   if (!chat.groupChat)
     return next(new ErrorHnadle("This is not a group chat", 400));
@@ -105,9 +108,7 @@ const addMembers = TryCatch(async (req, res, next) => {
       new ErrorHnadle("Only creator of group can add a new members", 400)
     );
 
-  const newMemberPromise = members.map((user) =>
-    User.findById(user._id, "name")
-  );
+  const newMemberPromise = members.map((user) => User.findById(user, "name"));
 
   const allNewMemberPromisDone = await Promise.all(newMemberPromise);
   const allNewMember = allNewMemberPromisDone.map((user) => user._id);
@@ -117,13 +118,13 @@ const addMembers = TryCatch(async (req, res, next) => {
     next(new ErrorHnadle("Maximum members limit reached", 400));
   await chat.save();
 
-  const allNewMemberName = allNewMember.map((user) => user.name).join(",");
+  const allNewMemberName = allNewMemberPromisDone.map((user) => user.name).join(",");
 
   emitEvent(
     req,
     ALERT,
     chat.members,
-    `${allNewMemberName} added to members of group chat`
+    `${allNewMemberName} added as a members of group chat`
   );
 
   return res.status(200).json({
@@ -168,4 +169,37 @@ const removeMembers = TryCatch(async (req, res, next) => {
   });
 });
 
-export { newGroup, getMyChats, getMyGroups, addMembers, removeMembers };
+const leaveGroup = TryCatch(async (req, res, next) => {
+  const { chatId } = req.params.id;
+
+  const chat = await Chat.findById(chatId);
+
+  if (!chat) return next(new ErrorHnadle("Chat not found", 404));
+  if (!chat.groupChat)
+    return next(new ErrorHnadle("This is not a group chat", 400));
+
+  if (chat.creator.toString() === req.userId.toString()) {
+    chat.creator = getRandomMemberId(chat.members, req.userId.toString());
+  }
+
+  chat.members.filter((user) => user._id.toString() !== req.userId.toString());
+  const [leftUserName] = await Promise.all([
+    User.findById(req.userId, "name"),
+    chat.save(),
+  ]);
+
+  emitEvent(req, ALERT, chat.members, `${leftUserName} left the group chat`);
+  return res.status(200).json({
+    success: true,
+    message: "Member left the group !!!",
+  });
+});
+
+export {
+  newGroup,
+  getMyChats,
+  getMyGroups,
+  addMembers,
+  removeMembers,
+  leaveGroup,
+};

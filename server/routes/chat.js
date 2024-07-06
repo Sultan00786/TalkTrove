@@ -4,6 +4,7 @@ import {
   addMembers,
   getMyChats,
   getMyGroups,
+  leaveGroup,
   newGroup,
   removeMembers,
 } from "../controllers/chat.js";
@@ -19,5 +20,6 @@ chatRouter.get("/getMyChats", getMyChats); // get all chats of the current user
 chatRouter.get("/getMyChats/group", getMyGroups); // get all groups of the user
 chatRouter.put("/addMembers", addMembers); // Add members to a group
 chatRouter.put("/removeMembers", removeMembers); // Remove members from a group
+chatRouter.delete("/leaveGroup/:id", leaveGroup); // Leave a group
 
 export default chatRouter;
