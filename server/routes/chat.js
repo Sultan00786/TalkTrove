@@ -2,11 +2,14 @@ import express from "express";
 import { isAuthenticat } from "../middlewares/isAuthenticat.js";
 import {
   addMembers,
+  deleteChat,
+  getChatDetails,
   getMyChats,
   getMyGroups,
   leaveGroup,
   newGroup,
   removeMember,
+  renameGroup,
   sendAttachments,
 } from "../controllers/chat.js";
 import { multipleAttachemnts, singleAvatar } from "../middlewares/multer.js";
@@ -24,5 +27,7 @@ chatRouter.put("/addMembers", addMembers); // Add members to a group
 chatRouter.put("/removeMember", removeMember); // Remove members from a group
 chatRouter.delete("/leaveGroup/:id", leaveGroup); // Leave a group
 chatRouter.post("/sendAttachments", multipleAttachemnts, sendAttachments); // Send attachments in user chat
+// Get chat details, rename, delete
+chatRouter.route("/:id").get(getChatDetails).put(renameGroup).delete(deleteChat);
 
 export default chatRouter;
