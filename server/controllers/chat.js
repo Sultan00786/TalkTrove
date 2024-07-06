@@ -1,6 +1,12 @@
-import { ALERT, REFETCH_CHATS } from "../constants/events.js";
+import {
+  ALERT,
+  NEW_ATTACHMENT,
+  NEW_MESSAGE_ALERT,
+  REFETCH_CHATS,
+} from "../constants/events.js";
 import { TryCatch } from "../middlewares/error.js";
 import { Chat } from "../models/chat.js";
+import { Message } from "../models/message.js";
 import { User } from "../models/user.js";
 import { emitEvent } from "../utils/feature.js";
 import { getRandomMemberId } from "../utils/fuction.js";
@@ -192,7 +198,9 @@ const leaveGroup = TryCatch(async (req, res, next) => {
     chat.creator = getRandomMemberId(chat.members, req.userId.toString());
   }
 
-  chat.members.filter((user) => user._id.toString() !== req.userId.toString());
+  chat.members = chat.members.filter(
+    (user) => user._id.toString() !== req.userId.toString()
+  );
   const [leftUserName] = await Promise.all([
     User.findById(req.userId, "name"),
     chat.save(),
@@ -210,6 +218,58 @@ const leaveGroup = TryCatch(async (req, res, next) => {
   });
 });
 
+const sendAttachments = TryCatch(async (req, res, next) => {
+  const { chatId } = req.body;
+
+  console.log(req.body);
+
+  const [chat, me] = await Promise.all([
+    Chat.findById(chatId),
+    User.findById(req.userId, "name"),
+  ]);
+
+  if (!chat) return next(new ErrorHnadle("Chat not found", 404));
+
+  const files = req.files || [];
+  if (files.length < 1)
+    return next(new ErrorHnadle("Please provide attachements", 400));
+
+  // Upload files here
+  const attachment = [];
+
+  const messageForDB = {
+    content: "",
+    attachment: attachment,
+    sender: req.userId || me._id,
+    chat: chatId,
+  };
+
+  const messageData = await Message.create(messageForDB);
+
+  const messageForRealeTime = {
+    content: "",
+    attachment: attachment,
+    sender: {
+      _id: me._id,
+      name: me.name,
+    },
+    chat: chatId,
+  };
+
+  emitEvent(req, NEW_ATTACHMENT, chat.memgers, {
+    message: messageForRealeTime,
+    chatId,
+  });
+
+  emitEvent(req, NEW_MESSAGE_ALERT, chat.members, { chatId });
+
+  return res.status(200).json({
+    success: true,
+    message: "Attachements sent successfully",
+    data: messageData,
+  });
+});
+
 export {
   newGroup,
   getMyChats,
@@ -217,4 +277,5 @@ export {
   addMembers,
   removeMember,
   leaveGroup,
+  sendAttachments,
 };
