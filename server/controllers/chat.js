@@ -118,7 +118,9 @@ const addMembers = TryCatch(async (req, res, next) => {
     next(new ErrorHnadle("Maximum members limit reached", 400));
   await chat.save();
 
-  const allNewMemberName = allNewMemberPromisDone.map((user) => user.name).join(",");
+  const allNewMemberName = allNewMemberPromisDone
+    .map((user) => user.name)
+    .join(",");
 
   emitEvent(
     req,
@@ -133,8 +135,9 @@ const addMembers = TryCatch(async (req, res, next) => {
   });
 });
 
-const removeMembers = TryCatch(async (req, res, next) => {
+const removeMember = TryCatch(async (req, res, next) => {
   const { userId, chatId } = req.body;
+  const creatorId = req.userId;
 
   const [chat, userThatWillBeRemoved] = await Promise.all([
     Chat.findById(chatId),
@@ -142,16 +145,22 @@ const removeMembers = TryCatch(async (req, res, next) => {
   ]);
 
   if (!chat) return next(new ErrorHnadle("Chat not found", 404));
+
   if (!chat.groupChat)
     return next(new ErrorHnadle("This is not a group chat", 400));
-  if (chat.creator.toString() !== req.userId.toString())
+
+  if (chat.creator.toString() !== creatorId.toString())
     return next(
       new ErrorHnadle("Only creator of group can remove old members", 400)
     );
+
+  if (creatorId === userId)
+    return next(new ErrorHnadle("Creator can't be remove the group", 403));
+
   if (chat.members.length <= 3)
     return next(new ErrorHnadle("Group must have at least 3 members", 400));
 
-  chat.members.filter((i) => i._id !== userId);
+  chat.members = chat.members.filter((i) => i.toString() !== userId);
   await chat.save();
 
   emitEvent(
@@ -200,6 +209,6 @@ export {
   getMyChats,
   getMyGroups,
   addMembers,
-  removeMembers,
+  removeMember,
   leaveGroup,
 };

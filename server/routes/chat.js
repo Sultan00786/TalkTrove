@@ -6,7 +6,7 @@ import {
   getMyGroups,
   leaveGroup,
   newGroup,
-  removeMembers,
+  removeMember,
 } from "../controllers/chat.js";
 
 const chatRouter = express.Router();
@@ -19,7 +19,7 @@ chatRouter.post("/newGroup", newGroup); // create a new group
 chatRouter.get("/getMyChats", getMyChats); // get all chats of the current user
 chatRouter.get("/getMyChats/group", getMyGroups); // get all groups of the user
 chatRouter.put("/addMembers", addMembers); // Add members to a group
-chatRouter.put("/removeMembers", removeMembers); // Remove members from a group
+chatRouter.put("/removeMember", removeMember); // Remove members from a group
 chatRouter.delete("/leaveGroup/:id", leaveGroup); // Leave a group
 
 export default chatRouter;
