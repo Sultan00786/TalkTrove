@@ -137,7 +137,7 @@ const addMembers = TryCatch(async (req, res, next) => {
 
 const removeMember = TryCatch(async (req, res, next) => {
   const { userId, chatId } = req.body;
-  const creatorId = req.userId;
+  const loginUser = req.userId;
 
   const [chat, userThatWillBeRemoved] = await Promise.all([
     Chat.findById(chatId),
@@ -149,12 +149,12 @@ const removeMember = TryCatch(async (req, res, next) => {
   if (!chat.groupChat)
     return next(new ErrorHnadle("This is not a group chat", 400));
 
-  if (chat.creator.toString() !== creatorId.toString())
+  if (chat.creator.toString() !== loginUser.toString())
     return next(
       new ErrorHnadle("Only creator of group can remove old members", 400)
     );
 
-  if (creatorId === userId)
+  if (chat.creator.toString() === userId)
     return next(new ErrorHnadle("Creator can't be remove the group", 403));
 
   if (chat.members.length <= 3)
@@ -179,7 +179,8 @@ const removeMember = TryCatch(async (req, res, next) => {
 });
 
 const leaveGroup = TryCatch(async (req, res, next) => {
-  const { chatId } = req.params.id;
+  const chatId = req.params.id;
+  console.log(chatId);
 
   const chat = await Chat.findById(chatId);
 
@@ -197,7 +198,12 @@ const leaveGroup = TryCatch(async (req, res, next) => {
     chat.save(),
   ]);
 
-  emitEvent(req, ALERT, chat.members, `${leftUserName} left the group chat`);
+  emitEvent(
+    req,
+    ALERT,
+    chat.members,
+    `${leftUserName.name} left the group chat`
+  );
   return res.status(200).json({
     success: true,
     message: "Member left the group !!!",
