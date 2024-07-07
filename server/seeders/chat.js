@@ -8,18 +8,14 @@ const createSampleChat = async (chatCount) => {
     const user = await User.find().select("_id");
 
     const promiseChat = [];
-    const randomUserIndex = Math.floor(Math.random() * user.length);
 
     for (let i = 0; i < chatCount; i++) {
+      const randomUserIndex = Math.floor(Math.random() * user.length);
+      const randomUserIndex2 = Math.floor(Math.random() * user.length);
       const tempChat = Chat.create({
         name: faker.lorem.word(),
         isGroupChat: false,
-        members: [
-          user[randomUserIndex]._id,
-          randomUserIndex === 0
-            ? user[randomUserIndex + 1]._id
-            : user[randomUserIndex - 1]._id,
-        ],
+        members: [user[randomUserIndex]._id, user[randomUserIndex2]._id],
       });
       promiseChat.push(tempChat);
     }
