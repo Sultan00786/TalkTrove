@@ -38,7 +38,6 @@ const newGroup = TryCatch(async (req, res, next) => {
 });
 
 const getMyChats = TryCatch(async (req, res, next) => {
-  console.log(req.userId);
   const chats = await Chat.find({ members: req.userId }).populate(
     "members",
     "name avatar"
@@ -72,11 +71,10 @@ const getMyChats = TryCatch(async (req, res, next) => {
 });
 
 const getMyGroups = TryCatch(async (req, res, next) => {
-  console.log(req.userId);
-  const chats = await Chat.find({ members: req.userId }).populate(
-    "members",
-    "name avatar"
-  );
+  const chats = await Chat.find({
+    members: req.userId,
+    groupChat: true,
+  }).populate("members", "name avatar");
 
   if (!chats) {
     return next(new ErrorHnadle("User chat not found", 404));

@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import { faker, ne } from "@faker-js/faker";
 import { Chat } from "../models/chat.js";
 import { User } from "../models/user.js";
 import { Message } from "../models/message.js";
@@ -14,7 +14,12 @@ const createSampleChat = async (chatCount) => {
       const tempChat = Chat.create({
         name: faker.lorem.word(),
         isGroupChat: false,
-        members: user[randomUserIndex]._id,
+        members: [
+          user[randomUserIndex]._id,
+          randomUserIndex === 0
+            ? user[randomUserIndex + 1]._id
+            : user[randomUserIndex - 1]._id,
+        ],
       });
       promiseChat.push(tempChat);
     }

@@ -5,7 +5,11 @@ import { errorMiddleware } from "./middlewares/error.js";
 import chatRouter from "./routes/chat.js";
 import userRouter from "./routes/user.js";
 import { connectDB } from "./utils/feature.js";
-import { createSampleMessage } from "./seeders/chat.js";
+import {
+  createSampleChat,
+  createSampleGroupChat,
+  createSampleMessage,
+} from "./seeders/chat.js";
 
 dotenv.config({
   path: "./.env",
