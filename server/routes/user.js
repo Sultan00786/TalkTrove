@@ -8,15 +8,26 @@ import {
 } from "../controllers/user.js";
 import { singleAvatar } from "../middlewares/multer.js";
 import { isAuthenticat } from "../middlewares/isAuthenticat.js";
+import {
+  loginValidator,
+  registerValidator,
+  validatorHandler,
+} from "../lib/validators.js";
 
 const userRouter = express.Router();
 
 // ################################## USER ROUTES ###################################
 
 // upload avatar for the user
-userRouter.post("/new", singleAvatar, newUser);
+userRouter.post(
+  "/new",
+  singleAvatar,
+  registerValidator(),
+  validatorHandler,
+  newUser
+);
 // login route for the user
-userRouter.post("/login", login);
+userRouter.post("/login", loginValidator(), validatorHandler, login);
 
 // Afer user login to be accessible in all other routes
 userRouter.use(isAuthenticat);
