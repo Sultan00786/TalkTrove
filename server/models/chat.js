@@ -13,7 +13,6 @@ const schema = new Schema(
     creator: {
       type: Types.ObjectId,
       ref: "User",
-      required: true,
     },
     members: [
       {

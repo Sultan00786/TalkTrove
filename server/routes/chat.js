@@ -4,6 +4,7 @@ import {
   addMembers,
   deleteChat,
   getChatDetails,
+  getMessages,
   getMyChats,
   getMyGroups,
   leaveGroup,
@@ -28,6 +29,11 @@ chatRouter.put("/removeMember", removeMember); // Remove members from a group
 chatRouter.delete("/leaveGroup/:id", leaveGroup); // Leave a group
 chatRouter.post("/sendAttachments", multipleAttachemnts, sendAttachments); // Send attachments in user chat
 // Get chat details, rename, delete
-chatRouter.route("/:id").get(getChatDetails).put(renameGroup).delete(deleteChat);
+chatRouter
+  .route("/:id")
+  .get(getChatDetails)
+  .put(renameGroup)
+  .delete(deleteChat);
+chatRouter.get("/messages/:id", getMessages);
 
 export default chatRouter;

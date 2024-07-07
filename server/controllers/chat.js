@@ -358,6 +358,36 @@ const deleteChat = TryCatch(async (req, res, next) => {
   });
 });
 
+const getMessages = TryCatch(async (req, res, next) => {
+  const chatId = req.params.id;
+  const { page = 1 } = req.query;
+
+  const resultParPage = 20;
+  const skip = (page - 1) * resultParPage;
+
+  const [messages, total] = await Promise.all([
+    Message.find({ chat: chatId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(resultParPage)
+      .lean(),
+    Message.countDocuments({ chat: chatId }), // it count all number of found message from the query
+  ]);
+
+  // Math.ceil(4.3) = 5
+  // Math.floor(4.3) = 4
+  const totalPages = Math.ceil(total / resultParPage);
+
+  return res.status(200).json({
+    success: true,
+    message: "Messages send successfully",
+    data: {
+      messages: messages.reverse(), // it will show latest message first
+      totalPages,
+    },
+  });
+});
+
 export {
   newGroup,
   getMyChats,
@@ -369,4 +399,5 @@ export {
   getChatDetails,
   renameGroup,
   deleteChat,
+  getMessages,
 };
