@@ -1,4 +1,4 @@
-import { body, check, param, validationResult } from "express-validator";
+import { body, check, param, query, validationResult } from "express-validator";
 import { ErrorHnadle } from "../utils/utility.js";
 
 const validatorHandler = (req, res, next) => {
@@ -63,6 +63,23 @@ const getMessagesValidator = () => [
   param("id", "Please Enter Chat Id").notEmpty(),
 ];
 
+const searchUserValidator = () => [
+  query("name", "Please Enter Name").notEmpty(),
+];
+
+const sendFriendRequestValidator = () => [
+  body("userId", "Please Enter User Id").notEmpty(),
+];
+
+const acceptRequestValidator = () => [
+  body("requestId", "Please Enter User Id").notEmpty(),
+  body("accept")
+    .notEmpty()
+    .withMessage("Please Enter accept")
+    .isBoolean()
+    .withMessage("accept must be boolean !!"),
+];
+
 export {
   addMembersValidator,
   getMessagesValidator,
@@ -73,4 +90,7 @@ export {
   removeMembersValidator,
   sendAttachmentsValidator,
   validatorHandler,
+  searchUserValidator,
+  sendFriendRequestValidator,
+  acceptRequestValidator,
 };

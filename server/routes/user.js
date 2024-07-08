@@ -1,7 +1,9 @@
 import express from "express";
 import {
   acceptFriendRequest,
+  getMyFriend,
   getMyProfile,
+  getNotification,
   login,
   logout,
   newUser,
@@ -11,8 +13,12 @@ import {
 import { singleAvatar } from "../middlewares/multer.js";
 import { isAuthenticat } from "../middlewares/isAuthenticat.js";
 import {
+  acceptRequestValidator,
   loginValidator,
   registerValidator,
+  searchUserValidator,
+  sendAttachmentsValidator,
+  sendFriendRequestValidator,
   validatorHandler,
 } from "../lib/validators.js";
 
@@ -35,9 +41,20 @@ userRouter.post("/login", loginValidator(), validatorHandler, login);
 userRouter.use(isAuthenticat);
 userRouter.get("/myprofile", getMyProfile);
 userRouter.post("/logout", logout);
-userRouter.get("/search", searchUser);
-userRouter.put("/send-request", sendFriendRequest);
-userRouter.put("/accept-request", acceptFriendRequest);
-
+userRouter.get("/search", searchUserValidator(), validatorHandler, searchUser);
+userRouter.put(
+  "/sendRequest",
+  sendFriendRequestValidator(),
+  validatorHandler,
+  sendFriendRequest
+);
+userRouter.put(
+  "/accept-request",
+  acceptRequestValidator(),
+  validatorHandler,
+  acceptFriendRequest
+);
+userRouter.get("/notification", getNotification);
+userRouter.get("/getMyFriend", getMyFriend);
 
 export default userRouter;
