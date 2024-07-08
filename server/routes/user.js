@@ -1,10 +1,12 @@
 import express from "express";
 import {
+  acceptFriendRequest,
   getMyProfile,
   login,
   logout,
   newUser,
   searchUser,
+  sendFriendRequest,
 } from "../controllers/user.js";
 import { singleAvatar } from "../middlewares/multer.js";
 import { isAuthenticat } from "../middlewares/isAuthenticat.js";
@@ -34,5 +36,8 @@ userRouter.use(isAuthenticat);
 userRouter.get("/myprofile", getMyProfile);
 userRouter.post("/logout", logout);
 userRouter.get("/search", searchUser);
+userRouter.put("/send-request", sendFriendRequest);
+userRouter.put("/accept-request", acceptFriendRequest);
+
 
 export default userRouter;

@@ -5,7 +5,7 @@ import { TryCatch } from "../middlewares/error.js";
 import { ErrorHnadle } from "../utils/utility.js";
 import { Chat } from "../models/chat.js";
 import { Request } from "../models/request.js";
-import { NEW_REQUEST } from "../constants/events.js";
+import { NEW_REQUEST, REFETCH_CHATS } from "../constants/events.js";
 
 const cookieOptions = {
   maxAge: 15 * 24 * 60 * 60 * 1000,
@@ -89,7 +89,7 @@ const searchUser = TryCatch(async (req, res, next) => {
   });
 });
 
-const sendFriendRequest = TryCatch(async (req, res, next) => {``
+const sendFriendRequest = TryCatch(async (req, res, next) => {
   const { userId } = req.body;
 
   const request = await Request.findOne({
@@ -113,4 +113,49 @@ const sendFriendRequest = TryCatch(async (req, res, next) => {``
   });
 });
 
-export { newUser, login, getMyProfile, logout, searchUser };
+const acceptFriendRequest = TryCatch(async (req, res, next) => {
+  const { requestId, accept } = req.body;
+  const request = await Request.findById(requestId)
+    .populate("sender", "name")
+    .populate("reciever", "name");
+
+  if (!request) return next(new ErrorHnadle("Request not found", 404));
+
+  if (request.reciever._id.toString() !== req.userId)
+    return next(
+      new ErrorHnadle("You are not authorized to accept this request", 401)
+    );
+
+  if (!accept) {
+    await request.remove();
+    return res.status(200).json({
+      success: true,
+      message: "Friend Request Rejected!!!",
+    });
+  }
+
+  const members = [request.sender._id, request.reciever._id];
+
+  await Promise.all([
+    Chat.create({
+      members,
+      name: `${request.sender.name}-${request.reciever.name}`,
+    }),
+    request.remove(),
+  ]);
+
+  emitEvent(
+    req,
+    REFETCH_CHATS,
+    members
+  )
+
+  return res.status(200).json({
+    success: true,
+    message: "Friend Request Accepted!!!",
+    senderId: request.sender._id,
+
+  });
+});
+
+export { newUser, login, getMyProfile, logout, searchUser, sendFriendRequest, acceptFriendRequest };
