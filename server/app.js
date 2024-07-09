@@ -8,8 +8,10 @@ import { connectDB } from "./utils/feature.js";
 import {
   createSampleChat,
   createSampleGroupChat,
+  createSampleGroupMessage,
   createSampleMessage,
 } from "./seeders/chat.js";
+import { adminRouter } from "./routes/admin.js";
 
 dotenv.config({
   path: "./.env",
@@ -26,6 +28,7 @@ app.use(cookieParser());
 
 app.use("/user", userRouter);
 app.use("/chat", chatRouter);
+app.use("/admin", adminRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello world!");

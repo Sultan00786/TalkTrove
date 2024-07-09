@@ -64,7 +64,6 @@ chatRouter
   .get(getChatDetails)
   .put(renameGroup)
   .delete(deleteChat);
-
 // Get messages
 chatRouter.get(
   "/messages/:id",
