@@ -1,11 +1,15 @@
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 import express from "express";
+import { errorMiddleware } from "./middlewares/error.js";
+import chatRouter from "./routes/chat.js";
 import userRouter from "./routes/user.js";
 import { connectDB } from "./utils/feature.js";
-import dotenv from "dotenv";
-import { errorMiddleware } from "./middlewares/error.js";
-import cookieParser from "cookie-parser";
-import chatRouter from "./routes/chat.js";
-import { createUser } from "./seeders/user.js";
+import {
+  createSampleChat,
+  createSampleGroupChat,
+  createSampleMessage,
+} from "./seeders/chat.js";
 
 dotenv.config({
   path: "./.env",
