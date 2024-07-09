@@ -39,4 +39,10 @@ const deleteFilesFromCloudinary = async (public_ids) => {
   // Delete Files from cloudinary
 };
 
-export { connectDB, sendToken, emitEvent, deleteFilesFromCloudinary };
+export {
+  connectDB,
+  sendToken,
+  emitEvent,
+  deleteFilesFromCloudinary,
+  cookieOptions,
+};

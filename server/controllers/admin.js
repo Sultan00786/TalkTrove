@@ -1,7 +1,34 @@
+import jwt from "jsonwebtoken";
 import { TryCatch } from "../middlewares/error.js";
 import { Chat } from "../models/chat.js";
 import { Message } from "../models/message.js";
 import { User } from "../models/user.js";
+import { ErrorHnadle } from "../utils/utility.js";
+import { cookieOptions } from "../utils/feature.js";
+
+const adminLogin = TryCatch(async (req, res, next) => {
+  const { sceretKey } = req.body;
+
+  const isMatch = sceretKey === process.env.ADMIN_SCERET_KEY;
+
+  console.log(sceretKey);
+  console.log(process.env.ADMIN_SCERET_KEY);
+
+  if (!isMatch) return next(new ErrorHnadle("Invalid secret key", 401));
+
+  const token = jwt.sign(sceretKey, process.env.JWT_SECRET);
+
+  return res
+    .status(200)
+    .cookie("adminToken", token, {
+      ...cookieOptions,
+      maxAge: 1000 * 60 * 60 * 1,
+    })
+    .json({
+      success: true,
+      message: "Login successfully, Wellocme Backe Bossssss !!!!!!",
+    });
+});
 
 const allUser = TryCatch(async (req, res, next) => {
   const users = await User.find({});
@@ -146,4 +173,4 @@ const getDashboardState = TryCatch(async (req, res, next) => {
   });
 });
 
-export { allUser, allChat, allMessage, getDashboardState };
+export { allUser, allChat, allMessage, getDashboardState, adminLogin };

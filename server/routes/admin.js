@@ -1,15 +1,24 @@
 import express from "express";
 import {
+  adminLogin,
   allChat,
   allMessage,
   allUser,
   getDashboardState,
 } from "../controllers/admin.js";
+import { adminLoginValidator, validatorHandler } from "../lib/validators.js";
 const adminRouter = express.Router();
+
+// ################################## ADMIN ROUTES ###################################
 
 adminRouter.get("/");
 
-adminRouter.post("/verify");
+adminRouter.post(
+  "/verify",
+  adminLoginValidator(),
+  validatorHandler,
+  adminLogin
+);
 adminRouter.get("/logout");
 
 adminRouter.get("/user", allUser);

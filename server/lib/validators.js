@@ -80,6 +80,13 @@ const acceptRequestValidator = () => [
     .withMessage("accept must be boolean !!"),
 ];
 
+const adminLoginValidator = () => [
+  body(
+    "sceretKey",
+    "Please Enter the Scerert Key for login as Admin"
+  ).notEmpty(),
+];
+
 export {
   addMembersValidator,
   getMessagesValidator,
@@ -93,4 +100,5 @@ export {
   searchUserValidator,
   sendFriendRequestValidator,
   acceptRequestValidator,
+  adminLoginValidator,
 };
