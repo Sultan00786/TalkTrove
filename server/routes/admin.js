@@ -1,6 +1,7 @@
 import express from "express";
 import {
   adminLogin,
+  admintLogout,
   allChat,
   allMessage,
   allUser,
@@ -19,8 +20,8 @@ adminRouter.post(
   validatorHandler,
   adminLogin
 );
-adminRouter.get("/logout");
 
+adminRouter.get("/logout", admintLogout);
 adminRouter.get("/user", allUser);
 adminRouter.get("/chats", allChat);
 adminRouter.get("/messages", allMessage);

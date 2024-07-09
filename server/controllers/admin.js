@@ -30,6 +30,16 @@ const adminLogin = TryCatch(async (req, res, next) => {
     });
 });
 
+const admintLogout = TryCatch(async (req, res, next) => {
+  res
+    .status(200)
+    .clearCookie("adminToken", {
+      ...cookieOptions,
+      maxAge: 0,
+    })
+    .json({ success: true, message: "Logout successfully" });
+});
+
 const allUser = TryCatch(async (req, res, next) => {
   const users = await User.find({});
 
@@ -173,4 +183,11 @@ const getDashboardState = TryCatch(async (req, res, next) => {
   });
 });
 
-export { allUser, allChat, allMessage, getDashboardState, adminLogin };
+export {
+  allUser,
+  allChat,
+  allMessage,
+  getDashboardState,
+  adminLogin,
+  admintLogout,
+};
