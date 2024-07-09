@@ -8,6 +8,7 @@ import {
   getDashboardState,
 } from "../controllers/admin.js";
 import { adminLoginValidator, validatorHandler } from "../lib/validators.js";
+import { adminOnly } from "../middlewares/isAuthenticat.js";
 const adminRouter = express.Router();
 
 // ################################## ADMIN ROUTES ###################################
@@ -20,7 +21,7 @@ adminRouter.post(
   validatorHandler,
   adminLogin
 );
-
+adminRouter.use(adminOnly);
 adminRouter.get("/logout", admintLogout);
 adminRouter.get("/user", allUser);
 adminRouter.get("/chats", allChat);
