@@ -2,8 +2,6 @@ const errorMiddleware = (err, req, res, next) => {
   err.message ||= "Internal server error";
   err.statusCode ||= 500;
 
-  console.log(err.statusCode);
-
   if (err.code === 11000) {
     const error = Object.keys(err.keyPattern).join(", ");
     err.message = `Error occur because of dublicate - ${error}`;
@@ -18,7 +16,7 @@ const errorMiddleware = (err, req, res, next) => {
 
   return res.status(err.statusCode).json({
     success: false,
-    message: err.message,
+    message: "DEVELOPMENT" === process.env.NODE_ENV.trim() ? err : err.message,
   });
 };
 
