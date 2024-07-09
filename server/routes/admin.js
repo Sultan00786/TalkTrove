@@ -1,5 +1,10 @@
 import express from "express";
-import { allChat, allUser } from "../controllers/admin.js";
+import {
+  allChat,
+  allMessage,
+  allUser,
+  getDashboardState,
+} from "../controllers/admin.js";
 const adminRouter = express.Router();
 
 adminRouter.get("/");
@@ -9,7 +14,7 @@ adminRouter.get("/logout");
 
 adminRouter.get("/user", allUser);
 adminRouter.get("/chats", allChat);
-adminRouter.get("/messages");
-adminRouter.get("/stats");
+adminRouter.get("/messages", allMessage);
+adminRouter.get("/stats", getDashboardState);
 
 export { adminRouter };

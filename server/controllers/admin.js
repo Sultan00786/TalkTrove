@@ -73,4 +73,77 @@ const allChat = TryCatch(async (req, res, next) => {
   });
 });
 
-export { allUser, allChat };
+const allMessage = TryCatch(async (req, res, next) => {
+  const messages = await Message.find({}).populate("sender", "name avatar");
+
+  const data = messages.map(
+    ({ _id, content, sender, chat, attachment, createdAt }) => {
+      return {
+        _id,
+        attachment: attachment ? attachment : [],
+        content,
+        createdAt,
+        chat,
+        sender: {
+          id: sender._id,
+          name: sender.name,
+          avatar: sender.avatar.url,
+        },
+      };
+    }
+  );
+
+  return res.status(200).json({
+    message: "Messages fetched successfully",
+    data: data,
+  });
+});
+
+const getDashboardState = TryCatch(async (req, res, next) => {
+  const [totalUsers, totalChats, totalMessages, totalGroupChats] =
+    await Promise.all([
+      User.countDocuments({}),
+      Chat.countDocuments({}),
+      Message.countDocuments({}),
+      Chat.countDocuments({ groupChat: true }),
+    ]);
+
+  const today = new Date();
+  const last7Day = new Date();
+
+  last7Day.setDate(last7Day.getDate() - 7);
+
+  console.log(today, "\n", last7Day);
+
+  const last7DayMessage = await Message.find({
+    createdAt: {
+      $gte: last7Day,
+      $lte: today,
+    },
+  }).select("createdAt");
+
+  const messages = new Array(7).fill(0);
+  console.log(messages);
+  const dayInMilisecond = 1000 * 60 * 60 * 24;
+
+  last7DayMessage.forEach((message) => {
+    const index =
+      (today.getTime() - message.createdAt.getTime()) / dayInMilisecond;
+
+    const reverseIndex = 6 - Math.floor(index); // reverse the array according to 7 day in week
+    messages[reverseIndex]++;
+  });
+
+  return res.status(200).json({
+    message: "Dashboard state fetched successfully",
+    data: {
+      totalUsers,
+      totalChats,
+      totalMessages,
+      totalGroupChats,
+      messageChat: messages,
+    },
+  });
+});
+
+export { allUser, allChat, allMessage, getDashboardState };
