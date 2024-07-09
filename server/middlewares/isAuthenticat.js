@@ -18,7 +18,7 @@ const adminOnly = TryCatch(async (req, res, next) => {
 
   const decodedToken = jwt.verify(adminToken, process.env.JWT_SECRET);
   const sceretKey = decodedToken;
-  const isMatch = sceretKey === process.env.ADMIN_SECRET;
+  const isMatch = sceretKey === process.env.ADMIN_SCERET_KEY;
 
   if (!isMatch) return next(new ErrorHnadle("You are not an admin", 401));
 

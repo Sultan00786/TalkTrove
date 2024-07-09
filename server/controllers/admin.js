@@ -40,6 +40,12 @@ const admintLogout = TryCatch(async (req, res, next) => {
     .json({ success: true, message: "Logout successfully" });
 });
 
+const getAdminData = TryCatch(async (req, res, next) => {
+  return res.status(200).json({
+    admin: true,
+  });
+});
+
 const allUser = TryCatch(async (req, res, next) => {
   const users = await User.find({});
 
@@ -190,4 +196,5 @@ export {
   getDashboardState,
   adminLogin,
   admintLogout,
+  getAdminData
 };
