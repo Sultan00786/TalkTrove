@@ -58,6 +58,7 @@ chatRouter.post(
   validatorHandler,
   sendAttachments
 ); // Send attachments in user chat
+
 // Get chat details, rename, delete
 chatRouter
   .route("/:id")

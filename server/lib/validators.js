@@ -3,7 +3,6 @@ import { ErrorHnadle } from "../utils/utility.js";
 
 const validatorHandler = (req, res, next) => {
   const errors = validationResult(req);
-  console.log(errors);
   const errorsMsg = errors
     .array()
     .map((err) => err.msg)
