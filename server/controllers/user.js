@@ -17,6 +17,9 @@ const cookieOptions = {
 
 const newUser = TryCatch(async (req, res, next) => {
   const { name, username, password, bio } = req.body;
+  const file = req.file;
+
+  if (!file) return next(new ErrorHnadle("Please Upload a Image", 400));
 
   const avatar = {
     public_id: "Sdfdfsaf",
