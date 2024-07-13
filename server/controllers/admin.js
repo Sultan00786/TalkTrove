@@ -11,9 +11,6 @@ const adminLogin = TryCatch(async (req, res, next) => {
 
   const isMatch = sceretKey === process.env.ADMIN_SCERET_KEY;
 
-  console.log(sceretKey);
-  console.log(process.env.ADMIN_SCERET_KEY);
-
   if (!isMatch) return next(new ErrorHnadle("Invalid secret key", 401));
 
   const token = jwt.sign(sceretKey, process.env.JWT_SECRET);
@@ -40,6 +37,7 @@ const admintLogout = TryCatch(async (req, res, next) => {
     .json({ success: true, message: "Logout successfully" });
 });
 
+// verifying the admin
 const getAdminData = TryCatch(async (req, res, next) => {
   return res.status(200).json({
     admin: true,

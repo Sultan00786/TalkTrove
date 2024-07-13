@@ -14,8 +14,10 @@ import {
 import { adminRouter } from "./routes/admin.js";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import { NEW_MESSAGE } from "./constants/events.js";
+import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
 import { v4 as uuid } from "uuid";
+import { getSockets } from "./lib/helper.js";
+import { Message } from "./models/message.js";
 
 dotenv.config({
   path: "./.env",
@@ -29,6 +31,8 @@ connectDB(mongoDbUrl);
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {});
+
+const userSocketIds = new Map();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -46,11 +50,10 @@ io.on("connection", (socket) => {
     _id: "XXXXXXXX",
     name: "John Doe",
   };
-
-  console.log("Connected to socket.io");
+  userSocketIds.set(user._id.toString(), socket.id);
   console.log(`User ${socket.id} is connected`);
 
-  socket.on(NEW_MESSAGE, ({ chatId, members, message }) => {
+  socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
     const messageForRealTime = {
       content: message,
       _id: uuid(),
@@ -61,11 +64,29 @@ io.on("connection", (socket) => {
       chat: chatId,
       createdAt: new Date().toISOString(),
     };
-    console.log(`New message`, messageForRealTime);
+    const messageForDB = {
+      content: message,
+      sender: user._id,
+      chat: chatId,
+    };
+
+    const onlineMembersSockets = getSockets(members);
+    io.to(onlineMembersSockets).emit(NEW_MESSAGE, {
+      chatId,
+      message: NEW_MESSAGE,
+    });
+    io.to(onlineMembersSockets).emit(NEW_MESSAGE_ALERT, { chatId });
+
+    try {
+      await Message.create(messageForDB);
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   socket.on("disconnect", () => {
     console.log(`User ${socket.id} is disconnected`);
+    userSocketIds.delete(user._id.toString());
   });
 });
 
@@ -75,3 +96,5 @@ server.listen(port, () => {
     `Server is running on port ${port} in ${process.env.NODE_ENV.trim()} MODE`
   );
 });
+
+export { userSocketIds };
