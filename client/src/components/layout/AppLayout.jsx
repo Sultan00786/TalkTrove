@@ -4,8 +4,9 @@ import Title from "../shared/Title";
 import { Grid } from "@mui/material";
 import Loader from "./Loader";
 import ChatList from "../specific/ChatList";
-import { sampleChats } from "../constant/sampleData";
+import { sampleChats, sampleUser } from "../constant/sampleData";
 import { useParams } from "react-router-dom";
+import Profile from "../specific/Profile";
 
 const AppLayout = () => (WrappedCommponent) => {
   return (props) => {
@@ -54,9 +55,9 @@ const AppLayout = () => (WrappedCommponent) => {
                 display: { xs: "none", md: "block" },
               }}
               height={"100%"}
-              className=" p-8 bg-slate-950 bg-opacity-95 text-white"
+              className="bg-black bg-opacity-95 text-white"
             >
-              Third
+              <Profile user={sampleUser} />
             </Grid>
           </Grid>
         </Suspense>
