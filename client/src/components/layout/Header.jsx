@@ -114,7 +114,7 @@ const Header = () => {
       </Box>
       {isSearch && (
         <Suspense fallback={<Backdrop open />}>
-          <SearchDialog />
+          <SearchDialog open={isSearch} handleSearch={handleSearch} />
         </Suspense>
       )}
       {isNewGroup && (

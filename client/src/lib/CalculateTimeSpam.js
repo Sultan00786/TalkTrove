@@ -1,9 +1,7 @@
 export const calculateTimeSpam = (date) => {
   const today = new Date();
   const createdAt = date;
-  let diffTimeInMinutes = 13685.005866666666;
-  // let diffTimeInMinutes = (today - createdAt) / (1000 * 60);
-  console.log(diffTimeInMinutes);
+  let diffTimeInMinutes = (today - createdAt) / (1000 * 60);
 
   // year time spam = 365×24×60=525600
   if (diffTimeInMinutes >= 525600) {

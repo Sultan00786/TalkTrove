@@ -5,7 +5,6 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { calculateTimeSpam } from "../../lib/CalculateTimeSpam";
 
 function Profile({ user }) {
-  console.log(calculateTimeSpam(user.createdAt));
   const userJoin = calculateTimeSpam(user.createdAt);
   return (
     <div className="flex flex-col items-center gap-6 h-full pt-6">
