@@ -7,10 +7,14 @@ export const sampleChats = [
     members: ["1", "2"],
   },
   {
-    avatar: ["https://avatars.githubusercontent.com/u/12584982"],
+    avatar: [
+      "https://avatars.githubusercontent.com/u/12584982",
+      "https://avatars.githubusercontent.com/u/12584982",
+      "https://avatars.githubusercontent.com/u/12584982",
+    ],
     name: "John Boi",
     _id: "2",
-    groupChat: false,
+    groupChat: true,
     members: ["1", "2"],
   },
 ];

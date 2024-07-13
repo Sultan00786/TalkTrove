@@ -1,6 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
+import AvatarCard from "./AvatarCard";
 
 function ChatItem({
   avatar,
@@ -19,14 +20,15 @@ function ChatItem({
       onContextMenu={(e) => handleDeleteChat(e, _id, groupChat)}
     >
       <div
-        className={`relative px-3 py-3 cursor-pointer  ${
+        className={`relative flex gap-3 px-3 py-3 cursor-pointer  ${
           isChatOpen
             ? " bg-black text-white hover:bg-gray-900"
             : "hover:bg-gray-300"
         }`}
       >
+        <AvatarCard avatar={avatar} />
         <div className="flex items-center justify-between">
-          <div className=" text-xl font-bold ">{name}</div>
+          <div className=" text-lg font-bold ">{name}</div>
           {newMessageAlert && (
             <div className=" text-xs font-semibold pr-2">
               {newMessageAlert?.count} New Message
