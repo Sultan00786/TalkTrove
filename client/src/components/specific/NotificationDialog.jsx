@@ -23,7 +23,7 @@ function NotificationDialog({ handleNotification, open }) {
       <Dialog onClick={handleNotification} open={open}>
         <div
           onClick={handler}
-          className=" lg:min-w-[500px] lg:min-h-96 flex flex-col gap-5 items-center p-4 "
+          className=" lg:min-w-[400px] lg:min-h-96 flex flex-col gap-5 items-center p-4 "
         >
           <Typography variant="h6">Notification</Typography>
           <div className=" w-full px-16 pt-3 flex flex-col gap-4">
@@ -33,19 +33,19 @@ function NotificationDialog({ handleNotification, open }) {
                   <img
                     src={user.avatar[0]}
                     alt=""
-                    className="w-9 h-9 rounded-full  "
+                    className="w-8 h-8 rounded-full border-[1px] shadow-sm border-gray-200 "
                   />{" "}
                   <p>{user.name}</p>
                 </div>
                 <div className=" flex items-center gap-3">
                   <div className=" bg-green-500 w-fit rounded-full hover:bg-green-600 ">
-                    <IconButton className=" w-8 h-8 ">
-                      <Check className=" text-white" />
+                    <IconButton className=" w-7 h-7 flex items-center justify-center ">
+                      <Check fontSize="small" className=" text-white" />
                     </IconButton>
                   </div>
                   <div className=" bg-red-500 w-fit rounded-full hover:bg-red-600 ">
-                    <IconButton className=" w-8 h-8 ">
-                      <Clear className=" text-white" />
+                    <IconButton className=" w-7 h-7 flex items-center justify-center ">
+                      <Clear fontSize="small" className=" text-white" />
                     </IconButton>
                   </div>
                 </div>
