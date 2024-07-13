@@ -124,7 +124,10 @@ const Header = () => {
       )}
       {isNofication && (
         <Suspense fallback={<Backdrop open />}>
-          <NotificationDialog />
+          <NotificationDialog
+            handleNotification={handleNotification}
+            open={isNofication}
+          />
         </Suspense>
       )}
     </>
