@@ -29,3 +29,159 @@ export const sampleUser = {
   bio: "I am a full-stack developer. ",
   createdAt: new Date("2024-07-03T16:38:38.105+00:00"),
 };
+
+export const sampleMessage = [
+  {
+    _id: "111",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "1",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "222",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "2",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "333",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "1",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "444",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "1",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "555",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "2",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "666",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "2",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "666",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "2",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "444",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "1",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "666",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "2",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "444",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "1",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "666",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "2",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "444",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "1",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "666",
+    content:
+      "Bos crustulum sit atavus coniuratio dignissimos aduro vilicus patruus.",
+    sender: "2",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+  {
+    _id: "444",
+    content: "Bos crustulum ",
+    sender: "1",
+    chat: "11",
+    attachment: [],
+    createdAt: "2024-07-09T00:27:48.673Z",
+    updatedAt: "2024-07-09T00:27:48.673Z",
+    __v: 0,
+  },
+];
