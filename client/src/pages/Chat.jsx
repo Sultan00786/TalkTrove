@@ -1,8 +1,47 @@
 import React from "react";
 import AppLayout from "../components/layout/AppLayout";
+import { IconButton, InputBase, Paper, Stack, TextField } from "@mui/material";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import SendIcon from "@mui/icons-material/Send";
+import { orange } from "@mui/material/colors";
+import { sampleMessage } from "../components/constant/sampleData";
+import MessageBox from "../components/message/MessageBox";
+import MessageAttachement from "../components/message/MessageAttachement";
 
 function Chat() {
-  return <div className=" bg-gray-300 h-full">Chat</div>;
+  const messages = sampleMessage;
+  const userId = "1";
+  return (
+    <div className=" w-full h-full max-h-[95vh]">
+      <div className=" bg-gray-300 h-[88%] px-5 py-3 rounded-sm overflow-y-auto overflow-x-hidden flex flex-col gap-5 shadow-sm shadow-neutral-900">
+        {messages.map((message, index) => (
+          <>
+            {message?.attachment?.length !== 0 ? (
+              <MessageAttachement />
+            ) : (
+              <MessageBox userId={userId} message={message} key={index} />
+            )}
+          </>
+        ))}
+      </div>
+      <div className=" w-full h-fit flex items-center gap-2 ">
+        <div className=" w-full h-fit flex items-center gap-4 px-3 pt-6  ">
+          <div className="w-full h-[50%] bg-gray-300 rounded-full p-1 px-2 flex items-center shadow-sm shadow-neutral-900 ">
+            <IconButton>
+              <AttachFileIcon className=" text-gray-500 rotate-12" />
+            </IconButton>
+            <InputBase
+              placeholder="Type your message"
+              className=" w-full"
+            ></InputBase>
+          </div>
+          <div className=" bg-rose-400 hover:bg-rose-500 w-fit h-fit  rounded-full p-2 shadow-sm shadow-neutral-900">
+            <SendIcon className=" text-gray-50 -rotate-45 " />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default AppLayout()(Chat);
