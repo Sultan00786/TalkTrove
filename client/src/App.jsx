@@ -14,7 +14,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 function App() {
   const user = true; // to do
   return (
-    <div className=" bg-gray-200 w-full min-h-[100vh]">
+    <div className=" bg-gray-200 w-full min-h-[100vh] overflow-hidden">
       <BrowserRouter>
         <Toaster position="top-right" reverseOrder={true} />
         <Suspense fallback={<Loader />}>

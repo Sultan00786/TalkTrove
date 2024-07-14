@@ -52,13 +52,14 @@ const Header = () => {
   }
 
   return (
-    <>
-      <Box flexGrow={1}>
-        <AppBar position="static" sx={{ bgcolor: orange }}>
+    <div className=" z-100 shadow-xl ">
+      <Box flexGrow={0} sx={{}}>
+        <AppBar position="fixed" sx={{ bgcolor: orange }}>
           <Toolbar
             sx={{
               display: "flex",
               justifyContent: "space-between",
+              zIndex: 100,
             }}
           >
             <div>
@@ -130,11 +131,11 @@ const Header = () => {
         <Suspense fallback={<Backdrop open />}>
           <NotificationDialog
             open={isNofication}
-            handleNotification = {handleNotification}
+            handleNotification={handleNotification}
           />
         </Suspense>
       )}
-    </>
+    </div>
   );
 };
 
