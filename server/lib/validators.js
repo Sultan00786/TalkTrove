@@ -3,7 +3,6 @@ import { ErrorHnadle } from "../utils/utility.js";
 
 const validatorHandler = (req, res, next) => {
   const errors = validationResult(req);
-  console.log(errors);
   const errorsMsg = errors
     .array()
     .map((err) => err.msg)
@@ -20,7 +19,6 @@ const registerValidator = () => [
   body("username", "Please Enter Username").notEmpty(),
   body("password", "Please Enter Password").notEmpty(),
   body("bio", "Please Enter Bio").notEmpty(),
-  check("avatar", "Please Enter Avatar").notEmpty(),
 ];
 
 const loginValidator = () => [
@@ -80,6 +78,13 @@ const acceptRequestValidator = () => [
     .withMessage("accept must be boolean !!"),
 ];
 
+const adminLoginValidator = () => [
+  body(
+    "sceretKey",
+    "Please Enter the Scerert Key for login as Admin"
+  ).notEmpty(),
+];
+
 export {
   addMembersValidator,
   getMessagesValidator,
@@ -93,4 +98,5 @@ export {
   searchUserValidator,
   sendFriendRequestValidator,
   acceptRequestValidator,
+  adminLoginValidator,
 };

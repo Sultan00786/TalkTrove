@@ -73,7 +73,7 @@ const createSampleMessage = async (messageCount) => {
       const tempMessage = Message.create({
         sender: user[Math.floor(Math.random() * user.length)]._id,
         content: faker.lorem.sentence(),
-        chat: "668a1c7be8f96c649d25d1fa",
+        chat: user[Math.floor(Math.random()) * user.length],
       });
       promiseMessage.push(tempMessage);
     }
@@ -89,11 +89,15 @@ const createSampleMessage = async (messageCount) => {
 const createSampleGroupMessage = async (messageCount) => {
   try {
     const user = await User.find();
-    const chat = await Chat.find({ groupChat: true });
+    const chat = await Chat.find({ groupChat: true }).populate("members");
     const promiseMessage = [];
     for (let i = 0; i < messageCount; i++) {
+      const rChatLength = Math.floor(Math.random() * chat.length);
+      const rMemberLength = Math.floor(
+        Math.random() * chat[rChatLength].members.length
+      );
       const tempMessage = Message.create({
-        sender: user[Math.floor(Math.random() * user.length)]._id,
+        sender: chat[rChatLength].members[rMemberLength]._id,
         content: faker.lorem.sentence(),
         chat: chat[Math.floor(Math.random() * chat.length)]._id,
       });

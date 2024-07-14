@@ -58,13 +58,13 @@ chatRouter.post(
   validatorHandler,
   sendAttachments
 ); // Send attachments in user chat
+
 // Get chat details, rename, delete
 chatRouter
   .route("/:id")
   .get(getChatDetails)
   .put(renameGroup)
   .delete(deleteChat);
-
 // Get messages
 chatRouter.get(
   "/messages/:id",

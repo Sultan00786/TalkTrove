@@ -48,6 +48,7 @@ const Header = () => {
 
   function handleNotification() {
     setIsNofication((prev) => !prev);
+    console.log("click on handleNotification");
   }
 
   return (
@@ -114,17 +115,23 @@ const Header = () => {
       </Box>
       {isSearch && (
         <Suspense fallback={<Backdrop open />}>
-          <SearchDialog />
+          <SearchDialog open={isSearch} handleSearch={handleSearch} />
         </Suspense>
       )}
       {isNewGroup && (
         <Suspense fallback={<Backdrop open />}>
-          <NewGroupDialog />
+          <NewGroupDialog
+            open={isNewGroup}
+            handlerToShowCreateGroup={handleCreatGroup}
+          />
         </Suspense>
       )}
       {isNofication && (
         <Suspense fallback={<Backdrop open />}>
-          <NotificationDialog />
+          <NotificationDialog
+            open={isNofication}
+            handleNotification = {handleNotification}
+          />
         </Suspense>
       )}
     </>
