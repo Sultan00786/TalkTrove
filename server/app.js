@@ -16,8 +16,8 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
 import { v4 as uuid } from "uuid";
-import { getSockets } from "./lib/helper.js";
 import { Message } from "./models/message.js";
+import { getSockets } from "./lib/helper.js";
 
 dotenv.config({
   path: "./.env",
