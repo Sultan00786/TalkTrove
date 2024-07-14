@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function MessageAttachement() {
-  return (
-    <div>MessageAttachement</div>
-  )
+  return <div>MessageAttachement</div>;
 }
 
-export default MessageAttachement
+export default MessageAttachement;

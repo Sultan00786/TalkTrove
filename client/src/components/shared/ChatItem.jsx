@@ -28,7 +28,7 @@ function ChatItem({
       >
         <AvatarCard avatar={avatar} />
         <div className="flex items-center justify-between">
-          <div className="font-semibold ">{name}</div>
+          <div className=" text-lg font-bold ">{name}</div>
           {newMessageAlert && (
             <div className=" text-xs font-semibold pr-2">
               {newMessageAlert?.count} New Message
