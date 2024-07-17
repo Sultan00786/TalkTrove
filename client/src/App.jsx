@@ -9,6 +9,7 @@ const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Chat = lazy(() => import("./pages/Chat"));
 const Group = lazy(() => import("./pages/Group"));
+const GroupEdit = lazy(() => import("./components/editGroup/GroupEdit"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
@@ -23,6 +24,10 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/chat/:chatId" element={<Chat />} />
               <Route path="/groups" element={<Group />} />
+              <Route
+                path="/groups/group-edit/:chatId"
+                element={<GroupEdit />}
+              />
             </Route>
             <Route
               path="/login"
