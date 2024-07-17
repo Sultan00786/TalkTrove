@@ -7,7 +7,7 @@ import ChatList from "../specific/ChatList";
 import { sampleChats, sampleUser } from "../constant/sampleData";
 import { useParams } from "react-router-dom";
 import Profile from "../specific/Profile";
-import GroupChatEditList from "../specific/GroupChatEditList";
+import GroupChatEditList from "../editGroup/GroupChatEditList";
 
 const AppLayout =
   () =>
@@ -33,7 +33,10 @@ const AppLayout =
 
           <div>
             <Suspense fallback={<Loader />}>
-              <Grid container height={"calc(100vh - 4rem)"}>
+              <Grid
+                container
+                height={isGroupEdit ? "100vh" : "calc(100vh - 4rem)"}
+              >
                 <Grid
                   item
                   sm={4}
