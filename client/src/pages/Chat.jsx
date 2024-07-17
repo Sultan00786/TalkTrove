@@ -13,7 +13,7 @@ function Chat() {
   const userId = "1";
   return (
     <div className=" w-full h-full max-h-[95vh]">
-      <div className=" bg-gray-300 h-[88%] px-5 py-3 rounded-sm overflow-y-auto overflow-x-hidden flex flex-col gap-5 shadow-sm shadow-neutral-900">
+      <div className=" bg-gray-300 h-[88%] px-5 py-3 rounded-sm overflow-y-auto overflow-x-hidden flex flex-col gap-5 shadow-sm shadow-gray-300 border-2 border-gray-400 border-t-0">
         {messages.map((message, index) => (
           <>
             {message?.attachment?.length !== 0 ? (
