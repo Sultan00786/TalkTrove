@@ -3,7 +3,7 @@ import React from "react";
 function AvatarCard({ avatar }) {
   return (
     <div>
-      <div className="relative w-16 h-10">
+      <div className={`relative ${avatar.length === 1 ? "w-10" : "w-16"} h-10`}>
         {avatar.map((data, index) => {
           const left = `left-[${index - 0.5}rem] z-[${avatar.length - index}] `;
           return (
