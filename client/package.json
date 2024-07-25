@@ -21,6 +21,7 @@
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
+    "dotenv": "^16.4.5",
     "moment": "^2.30.1",
     "postcss": "^8.4.38",
     "react": "^18.3.1",
@@ -34,7 +35,8 @@
     "react-router-dom": "^6.23.1",
     "redux": "^5.0.1",
     "socket.io-client": "^4.7.5",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "vite-plugin-env-compatible": "^2.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
@@ -44,6 +46,7 @@
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "react-error-overlay": "^6.0.9",
     "tailwindcss": "^3.4.4",
     "vite": "^5.3.1"
   }
