@@ -18,6 +18,7 @@ import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
 import { v4 as uuid } from "uuid";
 import { Message } from "./models/message.js";
 import { getSockets } from "./lib/helper.js";
+import cors from "cors";
 
 dotenv.config({
   path: "./.env",
@@ -26,14 +27,13 @@ dotenv.config({
 const port = process.env.PORT || 3000;
 const mongoDbUrl = process.env.MONGODB_URI;
 
-connectDB(mongoDbUrl);
-
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {});
-
 const userSocketIds = new Map();
 
+connectDB(mongoDbUrl);
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 

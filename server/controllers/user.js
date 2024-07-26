@@ -7,6 +7,7 @@ import { Chat } from "../models/chat.js";
 import { Request } from "../models/request.js";
 import { NEW_REQUEST, REFETCH_CHATS } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
+import { uploadImage } from "../lib/cloudinaryConfig.js";
 
 const cookieOptions = {
   maxAge: 15 * 24 * 60 * 60 * 1000,
@@ -17,9 +18,12 @@ const cookieOptions = {
 
 const newUser = TryCatch(async (req, res, next) => {
   const { name, username, password, bio } = req.body;
-  const file = req.file;
+  const image = req.file;
 
-  if (!file) return next(new ErrorHnadle("Please Upload a Image", 400));
+  if (!image) return next(new ErrorHnadle("Please Upload a Image", 400));
+  // console.log(image);
+
+  console.log(uploadImage(image));
 
   const avatar = {
     public_id: "Sdfdfsaf",
@@ -214,6 +218,7 @@ const getMyFriend = TryCatch(async (req, res, next) => {
     });
   }
 });
+
 export {
   newUser,
   login,
