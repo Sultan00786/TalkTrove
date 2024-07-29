@@ -21,13 +21,13 @@ const newUser = TryCatch(async (req, res, next) => {
   const image = req.file;
 
   if (!image) return next(new ErrorHnadle("Please Upload a Image", 400));
-  // console.log(image);
+  // console.log(req);
 
-  console.log(uploadImage(image));
+  const avatarUri = await uploadImage(image);
 
   const avatar = {
-    public_id: "Sdfdfsaf",
-    url: "sdfss",
+    public_id: avatarUri.public_id,
+    url: avatarUri.url,
   };
 
   const newUser = await User.create({
@@ -36,6 +36,8 @@ const newUser = TryCatch(async (req, res, next) => {
     password: password,
     avatar: avatar,
   });
+
+  console.log(newUser);
 
   sendToken(res, newUser, 201, "User Created!!!");
 });
