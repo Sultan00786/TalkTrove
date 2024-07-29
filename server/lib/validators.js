@@ -14,6 +14,8 @@ const validatorHandler = (req, res, next) => {
   }
 };
 
+// express-validator can't support the file like image and video
+// so we have to hadle this file case seperatally in newUser controller
 const registerValidator = () => [
   body("name", "Please Enter Name").notEmpty(),
   body("username", "Please Enter Username").notEmpty(),
