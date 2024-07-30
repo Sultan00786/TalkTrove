@@ -32,6 +32,10 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {});
 const userSocketIds = new Map();
+const corsOptions = {
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+};
 
 connectDB(mongoDbUrl);
 
@@ -41,7 +45,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 

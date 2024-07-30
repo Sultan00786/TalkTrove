@@ -70,10 +70,12 @@ const getMyProfile = TryCatch(async (req, res, next) => {
 });
 
 const logout = TryCatch(async (req, res, next) => {
-  return res
+  const data = res
     .status(200)
     .cookie("ChatApp_token", "", { ...cookieOptions, maxAge: 0 })
     .json({ success: true, message: "Logged Out Successfully!!!" });
+
+  return data;
 });
 
 const searchUser = TryCatch(async (req, res, next) => {
