@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Loader from "./components/layout/Loader";
@@ -13,7 +14,7 @@ const GroupEdit = lazy(() => import("./components/editGroup/GroupEdit"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
-  const user = true; // to do
+  const { user } = useSelector((state) => state.user);
   return (
     <div className=" bg-gray-200 w-full min-h-[100vh] overflow-hidden">
       <BrowserRouter>

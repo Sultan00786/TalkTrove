@@ -5,6 +5,7 @@ import { Avatar, Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import toast from "react-hot-toast";
+import { newUser } from "../operation/apiController/userApi";
 
 function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -35,12 +36,17 @@ function Login() {
     }
   };
 
-  const onSubmitLogin = (event) => {
-    event.preventDefault();
+  const onSubmitLogin = (e) => {
+    const data = getValues();
+    console.log(data);
+    e.preventDefault();
   };
 
-  const onSubmitSignUp = (event) => {
-    event.preventDefault();
+  const onSubmitSignUp = (e) => {
+    let data = getValues();
+    data = { ...data, avatar: filePath };
+    const response = newUser(data);
+    e.preventDefault();
   };
 
   return (
@@ -48,6 +54,8 @@ function Login() {
       maxWidth="sm"
       sx={{
         display: "flex",
+        width: "100%",
+        height: "100vh",
       }}
       className=" flex h-full justify-center items-center "
     >
@@ -59,32 +67,32 @@ function Login() {
             </h1>
 
             {isLogin ? (
-              <div>
+              <div className="">
                 <form onSubmit={handleSubmit(onSubmitLogin)}>
                   <div className="flex flex-col gap-3">
                     <TextField
-                      id="Username"
-                      name="Username"
-                      label="Username *"
+                      id="username"
+                      name="username"
+                      label="username *"
                       className=" w-full"
-                      {...register("Username", { required: true })}
+                      {...register("username", { required: true })}
                     />
-                    {errors.Username && (
+                    {errors.username && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
-                        Please enter UserName
+                        Please enter userName
                       </p>
                     )}
 
                     <TextField
-                      id="Password"
-                      name="Password"
-                      label="Password *"
+                      id="password"
+                      name="password"
+                      label="password *"
                       type="password"
-                      {...register("Password", { required: true })}
+                      {...register("password", { required: true })}
                     />
-                    {errors.Password && (
+                    {errors.password && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
-                        Please enter Password
+                        Please enter password
                       </p>
                     )}
 
@@ -141,51 +149,51 @@ function Login() {
                     </div>
 
                     <TextField
-                      id="Name"
-                      name="Name"
-                      label="Name *"
-                      {...register("Name", { required: true })}
+                      id="name"
+                      name="name"
+                      label="name *"
+                      {...register("name", { required: true })}
                     />
-                    {errors.Name && (
+                    {errors.name && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
                         Please enter Name
                       </p>
                     )}
 
                     <TextField
-                      id="Bio"
-                      name="Bio"
-                      label="Bio *"
-                      {...register("Bio", { required: true })}
+                      id="bio"
+                      name="bio"
+                      label="bio *"
+                      {...register("bio", { required: true })}
                     />
-                    {errors.Bio && (
+                    {errors.bio && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
-                        Please enter Bio
+                        Please enter bio
                       </p>
                     )}
 
                     <TextField
-                      id="Username"
-                      name="Username"
-                      label="Username *"
-                      {...register("Username", { required: true })}
+                      id="username"
+                      name="username"
+                      label="username *"
+                      {...register("username", { required: true })}
                     />
-                    {errors.Username && (
+                    {errors.username && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
-                        Please enter UserName
+                        Please enter userName
                       </p>
                     )}
 
                     <TextField
-                      id="Password"
-                      name="Password"
-                      label="Password *"
+                      id="password"
+                      name="password"
+                      label="password *"
                       type="password"
-                      {...register("Password", { required: true })}
+                      {...register("password", { required: true })}
                     />
-                    {errors.Password && (
+                    {errors.password && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
-                        Please enter Password
+                        Please enter password
                       </p>
                     )}
 
