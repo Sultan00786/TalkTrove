@@ -1,16 +1,20 @@
 import React, { useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
+import { Avatar, Button, TextField } from "@mui/material";
+import { loginUser, newUser } from "../operation/apiController/userApi";
+import toast from "react-hot-toast";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
-import { Avatar, Button, TextField } from "@mui/material";
-import { useForm } from "react-hook-form";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import toast from "react-hot-toast";
-import { newUser } from "../operation/apiController/userApi";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [filePath, setFilePath] = useState(null);
   const fileInput = useRef();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     setValue,
@@ -27,25 +31,43 @@ function Login() {
         icon: "👏",
       });
     } else {
+      // Pending hie file upload ho rahi but not in desire form so I need to solve it farther !!
       const reader = new FileReader();
-      // console.log(reader);
+      console.log(reader);
       reader.readAsDataURL(file);
+      console.log(reader);
       reader.onload = () => {
         setFilePath(reader.result);
       };
+      // setFilePath(file);
     }
   };
 
   const onSubmitLogin = (e) => {
     const data = getValues();
     console.log(data);
+    // const formdata = new FormData();
+    // formdata.append("username", data.username);
+    // formdata.append("password", data.password);
+    dispatch(loginUser(data, dispatch, navigate));
+    const { user } = useSelector((state) => state.user);
+    console.log(user);
     e.preventDefault();
   };
 
   const onSubmitSignUp = (e) => {
     let data = getValues();
-    data = { ...data, avatar: filePath };
-    const response = newUser(data);
+    const formdata = new FormData();
+
+    // Pending hie file upload ho rahi but not in desire form so I need to solve it farther !!
+    console.log(filePath);
+    formdata.append("avatar", filePath);
+
+    formdata.append("username", data.username);
+    formdata.append("password", data.password);
+    formdata.append("name", data.name);
+    formdata.append("bio", data.bio);
+    const response = newUser(formdata);
     e.preventDefault();
   };
 
@@ -73,7 +95,7 @@ function Login() {
                     <TextField
                       id="username"
                       name="username"
-                      label="username *"
+                      label="Username *"
                       className=" w-full"
                       {...register("username", { required: true })}
                     />
@@ -86,7 +108,7 @@ function Login() {
                     <TextField
                       id="password"
                       name="password"
-                      label="password *"
+                      label="Password *"
                       type="password"
                       {...register("password", { required: true })}
                     />
@@ -151,7 +173,7 @@ function Login() {
                     <TextField
                       id="name"
                       name="name"
-                      label="name *"
+                      label="Name *"
                       {...register("name", { required: true })}
                     />
                     {errors.name && (
@@ -163,7 +185,7 @@ function Login() {
                     <TextField
                       id="bio"
                       name="bio"
-                      label="bio *"
+                      label="Bio *"
                       {...register("bio", { required: true })}
                     />
                     {errors.bio && (
@@ -175,7 +197,7 @@ function Login() {
                     <TextField
                       id="username"
                       name="username"
-                      label="username *"
+                      label="Username *"
                       {...register("username", { required: true })}
                     />
                     {errors.username && (
@@ -187,7 +209,7 @@ function Login() {
                     <TextField
                       id="password"
                       name="password"
-                      label="password *"
+                      label="Password *"
                       type="password"
                       {...register("password", { required: true })}
                     />

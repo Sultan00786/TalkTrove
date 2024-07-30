@@ -21,13 +21,16 @@ const connectDB = (url) => {
 
 const sendToken = (res, user, code, message) => {
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-
-  return res.status(code).cookie("ChatApp_token", token, cookieOptions).json({
-    success: true,
-    message: message,
-    userData: user,
-    token: token,
-  });
+  const response = res
+    .status(code)
+    .cookie("ChatApp_token", token, cookieOptions)
+    .json({
+      success: true,
+      message: message,
+      userData: user,
+      token: token,
+    });
+  return response;
 };
 
 const emitEvent = (req, event, users, data) => {

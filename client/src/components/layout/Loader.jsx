@@ -25,7 +25,7 @@ function Loader() {
         <Grid item xs={12} sm={8} lg={6} md={5} height={"100vh"}>
           <Stack spacing={2}>
             {Array.from({ length: 9 }).map((_, index) => (
-              <div>
+              <div key={index}>
                 <div>
                   <Skeleton
                     height={70}
