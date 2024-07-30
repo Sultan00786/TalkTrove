@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Loader from "./components/layout/Loader";
+import Cookies from "universal-cookie";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -14,7 +15,15 @@ const GroupEdit = lazy(() => import("./components/editGroup/GroupEdit"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
-  const { user } = useSelector((state) => state.user);
+  const { user, token } = useSelector((state) => state.user);
+  if (token) {
+    const cookies = new Cookies();
+    cookies.set("ChatApp_token", token, {
+      path: "/",
+      secure: true,
+      sameSite: "strict",
+    });
+  }
   return (
     <div className=" bg-gray-200 w-full min-h-[100vh] overflow-hidden">
       <BrowserRouter>

@@ -19,6 +19,11 @@ import {
   Search,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setToken, setUser } from "../../operation/reducer/userSlice";
+import { apiConnector } from "../../operation/apiConnect";
+import { userApiUrl } from "../../operation/apiUrl";
+import { userLogout } from "../../operation/apiController/userApi";
 
 const SearchDialog = lazy(() => import("../specific/SearchDialog"));
 const NewGroupDialog = lazy(() => import("../dialog/NewGroupDialog"));
@@ -26,6 +31,8 @@ const NotificationDialog = lazy(() => import("../specific/NotificationDialog"));
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.user);
   const [isSearch, setIsSearch] = useState(false);
   const [isNewGroup, setIsNewGroup] = useState(false);
   const [isNofication, setIsNofication] = useState(false);
@@ -42,8 +49,9 @@ const Header = () => {
     setIsNewGroup((prev) => !prev);
   }
 
-  function handleLogOut() {
+  async function handleLogOut() {
     console.log("click on handleLogOut");
+    dispatch(userLogout(token, dispatch, navigate));
   }
 
   function handleNotification() {
