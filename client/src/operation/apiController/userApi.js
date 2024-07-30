@@ -4,7 +4,7 @@ import { userApiUrl } from "../apiUrl";
 import toast from "react-hot-toast";
 import { setToken, setUser } from "../reducer/userSlice";
 
-const { NEW_USER_SIGN_UP, USER_LOGIN } = userApiUrl;
+const { NEW_USER_SIGN_UP, USER_LOGIN, USER_LOGOUT } = userApiUrl;
 
 export const newUser = (data) => {
   try {
@@ -35,10 +35,25 @@ export const loginUser = async (data, dispatch, navigate) => {
     toast.dismiss(toastId);
     toast.success("Logged in successfully");
 
-    // navigate("/");
+    navigate("/");
   } catch (error) {
     toast.dismiss(toastId);
     console.log(error);
     toast.error("Something went wrong while Logging");
+  }
+};
+
+export const userLogout = async (token, dispatch, navigate) => {
+  try {
+    const response = await apiConnector("POST", USER_LOGOUT);
+    dispatch(setUser(null));
+    dispatch(setToken(null));
+    localStorage.clear();
+    console.log(response);
+    navigate("/");
+    toast.success("Logged out successfully");
+  } catch (error) {
+    toast.error("Something went wrong while Logging out");
+    console.log(error);
   }
 };

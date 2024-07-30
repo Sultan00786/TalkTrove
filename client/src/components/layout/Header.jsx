@@ -20,10 +20,15 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setToken, setUser } from "../../operation/reducer/userSlice";
+import {
+  setLoading,
+  setToken,
+  setUser,
+} from "../../operation/reducer/userSlice";
 import { apiConnector } from "../../operation/apiConnect";
 import { userApiUrl } from "../../operation/apiUrl";
 import { userLogout } from "../../operation/apiController/userApi";
+import Loader from "./Loader";
 
 const SearchDialog = lazy(() => import("../specific/SearchDialog"));
 const NewGroupDialog = lazy(() => import("../dialog/NewGroupDialog"));
