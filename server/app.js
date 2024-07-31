@@ -53,9 +53,7 @@ app.use("/user", userRouter);
 app.use("/chat", chatRouter);
 app.use("/admin", adminRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello world!");
-});
+app.use(errorMiddleware);
 
 io.on("connection", (socket) => {
   const user = {
@@ -102,7 +100,6 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use(errorMiddleware);
 server.listen(port, () => {
   console.log(
     `Server is running on port ${port} in ${process.env.NODE_ENV.trim()} MODE`

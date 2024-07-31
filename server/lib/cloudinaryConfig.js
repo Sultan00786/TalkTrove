@@ -16,7 +16,6 @@ cloudinary.config({
 const getUri = (file) => {
   const parser = new DatauriParser();
   const extName = path.extname(file.originalname).toString();
-  console.log(extName);
   return parser.format(extName, file.buffer);
 };
 

@@ -17,23 +17,16 @@ const cookieOptions = {
 };
 
 const newUser = TryCatch(async (req, res, next) => {
-  console.log(req.body);
   const { name, username, password, bio } = req.body;
   const image = req.file;
 
-  console.log("image>>", image);
-
   if (!image) return next(new ErrorHnadle("Please Upload a Image", 400));
-  // console.log(req);
 
   const avatarUri = await uploadImage(image);
-
   const avatar = {
     public_id: avatarUri.public_id,
     url: avatarUri.url,
   };
-
-  console.log(avatar);
 
   const newUser = await User.create({
     name: name,
@@ -41,8 +34,6 @@ const newUser = TryCatch(async (req, res, next) => {
     password: password,
     avatar: avatar,
   });
-
-  // console.log(newUser);
 
   sendToken(res, newUser, 201, "User Created!!!");
 });
