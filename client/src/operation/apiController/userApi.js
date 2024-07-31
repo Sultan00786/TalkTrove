@@ -6,16 +6,19 @@ import { setToken, setUser } from "../reducer/userSlice";
 
 const { NEW_USER_SIGN_UP, USER_LOGIN, USER_LOGOUT } = userApiUrl;
 
-export const newUser = (data) => {
+export const newUser = async (data, navigate) => {
+  const toastId = toast.loading("Loading...");
   try {
-    console.log(data);
-    const response = apiConnector("POST", NEW_USER_SIGN_UP, data);
-    console.log(response);
+    const response = await apiConnector("POST", NEW_USER_SIGN_UP, data);
     if (!response) throw new Error(response);
-    return response;
+    console.log(response);
+    toast.dismiss(toastId);
+    toast.success("User created successfully");
+    navigate("/");
   } catch (error) {
+    toast.dismiss(toastId);
+    toast.error("Something went wrong while creating New User Account");
     console.log(error);
-    return error;
   }
 };
 
