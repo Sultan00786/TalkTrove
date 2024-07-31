@@ -8,10 +8,12 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router-dom";
+import { combineSlices } from "@reduxjs/toolkit";
 
 function Login() {
   const [isLogin, setIsLogin] = useState(true);
-  const [filePath, setFilePath] = useState(null);
+  const [filePath, setFilePath] = useState("");
+  const [file, setFile] = useState("");
   const fileInput = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,6 +28,7 @@ function Login() {
 
   const handlerFileChange = (event) => {
     const file = event.target.files[0];
+    console.log(file);
     if (!file) {
       toast("Please Upload image", {
         icon: "👏",
@@ -38,17 +41,14 @@ function Login() {
       console.log(reader);
       reader.onload = () => {
         setFilePath(reader.result);
+        setFile(file);
       };
-      // setFilePath(file);
     }
   };
 
   const onSubmitLogin = (e) => {
     const data = getValues();
     console.log(data);
-    // const formdata = new FormData();
-    // formdata.append("username", data.username);
-    // formdata.append("password", data.password);
     dispatch(loginUser(data, dispatch, navigate));
     const { user } = useSelector((state) => state.user);
     console.log(user);
@@ -58,16 +58,16 @@ function Login() {
   const onSubmitSignUp = (e) => {
     let data = getValues();
     const formdata = new FormData();
-
     // Pending hie file upload ho rahi but not in desire form so I need to solve it farther !!
-    console.log(filePath);
-    formdata.append("avatar", filePath);
+    console.log(file);
+    formdata.append("avatar", file);
 
     formdata.append("username", data.username);
     formdata.append("password", data.password);
     formdata.append("name", data.name);
     formdata.append("bio", data.bio);
-    const response = newUser(formdata);
+    console.log("Hellow World");
+    dispatch(newUser(formdata, navigate));
     e.preventDefault();
   };
 
@@ -165,7 +165,6 @@ function Login() {
                         id="DisplayPic"
                         name="DisplayPic"
                         className="hidden"
-                        accept="image/*"
                         onChange={handlerFileChange}
                       />
                     </div>
