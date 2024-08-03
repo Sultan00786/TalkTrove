@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SiMaildotru } from "react-icons/si";
 import Face6Icon from "@mui/icons-material/Face6";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { calculateTimeSpam } from "../../lib/CalculateTimeSpam";
+import { sampleUser } from "../constant/sampleData";
+import { getUser } from "../../operation/apiController/userApi";
 
-function Profile({ user }) {
+const Profile = () => {
+  const [user, setUser] = useState(sampleUser);
   const userJoin = calculateTimeSpam(user.createdAt);
+
+  useEffect(async () => {
+    const userData = await getUser();
+    console.log(userData);
+    console.log(user);
+  }, []);
+
   return (
     <div className="flex flex-col items-center gap-6 h-full pt-6">
       <div>
@@ -45,6 +55,6 @@ function Profile({ user }) {
       </div>
     </div>
   );
-}
+};
 
 export default Profile;
