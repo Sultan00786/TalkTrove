@@ -8,6 +8,7 @@ function AvatarCard({ avatar }) {
           const left = `left-[${index - 0.5}rem] z-[${avatar.length - index}] `;
           return (
             <div
+              key={index}
               className={`absolute ${left} w-10 h-10 rounded-full border-[3px] border-gray-200 shadow-md `}
             >
               <img
