@@ -16,8 +16,10 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
 import { v4 as uuid } from "uuid";
-import { getSockets } from "./lib/helper.js";
 import { Message } from "./models/message.js";
+import { getSockets } from "./lib/helper.js";
+import cors from "cors";
+import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config({
   path: "./.env",
@@ -26,14 +28,24 @@ dotenv.config({
 const port = process.env.PORT || 3000;
 const mongoDbUrl = process.env.MONGODB_URI;
 
-connectDB(mongoDbUrl);
-
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {});
-
 const userSocketIds = new Map();
+const corsOptions = {
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+};
 
+connectDB(mongoDbUrl);
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -41,9 +53,7 @@ app.use("/user", userRouter);
 app.use("/chat", chatRouter);
 app.use("/admin", adminRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello world!");
-});
+app.use(errorMiddleware);
 
 io.on("connection", (socket) => {
   const user = {
@@ -90,7 +100,6 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use(errorMiddleware);
 server.listen(port, () => {
   console.log(
     `Server is running on port ${port} in ${process.env.NODE_ENV.trim()} MODE`

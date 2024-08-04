@@ -1,15 +1,22 @@
 import React, { useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
+import { Avatar, Button, TextField } from "@mui/material";
+import { loginUser, newUser } from "../operation/apiController/userApi";
+import toast from "react-hot-toast";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
-import { Avatar, Button, TextField } from "@mui/material";
-import { useForm } from "react-hook-form";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { combineSlices } from "@reduxjs/toolkit";
 
 function Login() {
   const [isLogin, setIsLogin] = useState(true);
-  const [filePath, setFilePath] = useState(null);
+  const [filePath, setFilePath] = useState("");
+  const [file, setFile] = useState("");
   const fileInput = useRef();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     setValue,
@@ -21,26 +28,47 @@ function Login() {
 
   const handlerFileChange = (event) => {
     const file = event.target.files[0];
+    console.log(file);
     if (!file) {
       toast("Please Upload image", {
         icon: "👏",
       });
     } else {
+      // Pending hie file upload ho rahi but not in desire form so I need to solve it farther !!
       const reader = new FileReader();
-      // console.log(reader);
+      console.log(reader);
       reader.readAsDataURL(file);
+      console.log(reader);
       reader.onload = () => {
         setFilePath(reader.result);
+        setFile(file);
       };
     }
   };
 
-  const onSubmitLogin = (event) => {
-    event.preventDefault();
+  const onSubmitLogin = (e) => {
+    const data = getValues();
+    console.log(data);
+    dispatch(loginUser(data, dispatch, navigate));
+    const { user } = useSelector((state) => state.user);
+    console.log(user);
+    e.preventDefault();
   };
 
-  const onSubmitSignUp = (event) => {
-    event.preventDefault();
+  const onSubmitSignUp = (e) => {
+    let data = getValues();
+    const formdata = new FormData();
+    // Pending hie file upload ho rahi but not in desire form so I need to solve it farther !!
+    console.log(file);
+    formdata.append("avatar", file);
+
+    formdata.append("username", data.username);
+    formdata.append("password", data.password);
+    formdata.append("name", data.name);
+    formdata.append("bio", data.bio);
+    console.log("Hellow World");
+    dispatch(newUser(formdata, navigate));
+    e.preventDefault();
   };
 
   return (
@@ -48,6 +76,8 @@ function Login() {
       maxWidth="sm"
       sx={{
         display: "flex",
+        width: "100%",
+        height: "100vh",
       }}
       className=" flex h-full justify-center items-center "
     >
@@ -59,32 +89,32 @@ function Login() {
             </h1>
 
             {isLogin ? (
-              <div>
+              <div className="">
                 <form onSubmit={handleSubmit(onSubmitLogin)}>
                   <div className="flex flex-col gap-3">
                     <TextField
-                      id="Username"
-                      name="Username"
+                      id="username"
+                      name="username"
                       label="Username *"
                       className=" w-full"
-                      {...register("Username", { required: true })}
+                      {...register("username", { required: true })}
                     />
-                    {errors.Username && (
+                    {errors.username && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
-                        Please enter UserName
+                        Please enter userName
                       </p>
                     )}
 
                     <TextField
-                      id="Password"
-                      name="Password"
+                      id="password"
+                      name="password"
                       label="Password *"
                       type="password"
-                      {...register("Password", { required: true })}
+                      {...register("password", { required: true })}
                     />
-                    {errors.Password && (
+                    {errors.password && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
-                        Please enter Password
+                        Please enter password
                       </p>
                     )}
 
@@ -135,57 +165,56 @@ function Login() {
                         id="DisplayPic"
                         name="DisplayPic"
                         className="hidden"
-                        accept="image/*"
                         onChange={handlerFileChange}
                       />
                     </div>
 
                     <TextField
-                      id="Name"
-                      name="Name"
+                      id="name"
+                      name="name"
                       label="Name *"
-                      {...register("Name", { required: true })}
+                      {...register("name", { required: true })}
                     />
-                    {errors.Name && (
+                    {errors.name && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
                         Please enter Name
                       </p>
                     )}
 
                     <TextField
-                      id="Bio"
-                      name="Bio"
+                      id="bio"
+                      name="bio"
                       label="Bio *"
-                      {...register("Bio", { required: true })}
+                      {...register("bio", { required: true })}
                     />
-                    {errors.Bio && (
+                    {errors.bio && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
-                        Please enter Bio
+                        Please enter bio
                       </p>
                     )}
 
                     <TextField
-                      id="Username"
-                      name="Username"
+                      id="username"
+                      name="username"
                       label="Username *"
-                      {...register("Username", { required: true })}
+                      {...register("username", { required: true })}
                     />
-                    {errors.Username && (
+                    {errors.username && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
-                        Please enter UserName
+                        Please enter userName
                       </p>
                     )}
 
                     <TextField
-                      id="Password"
-                      name="Password"
+                      id="password"
+                      name="password"
                       label="Password *"
                       type="password"
-                      {...register("Password", { required: true })}
+                      {...register("password", { required: true })}
                     />
-                    {errors.Password && (
+                    {errors.password && (
                       <p className=" text-red-700 text-xs -mt-2 text-end">
-                        Please enter Password
+                        Please enter password
                       </p>
                     )}
 

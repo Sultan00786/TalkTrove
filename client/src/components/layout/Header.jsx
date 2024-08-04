@@ -19,6 +19,16 @@ import {
   Search,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setLoading,
+  setToken,
+  setUser,
+} from "../../operation/reducer/userSlice";
+import { apiConnector } from "../../operation/apiConnect";
+import { userApiUrl } from "../../operation/apiUrl";
+import { userLogout } from "../../operation/apiController/userApi";
+import Loader from "./Loader";
 
 const SearchDialog = lazy(() => import("../specific/SearchDialog"));
 const NewGroupDialog = lazy(() => import("../dialog/NewGroupDialog"));
@@ -26,6 +36,8 @@ const NotificationDialog = lazy(() => import("../specific/NotificationDialog"));
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.user);
   const [isSearch, setIsSearch] = useState(false);
   const [isNewGroup, setIsNewGroup] = useState(false);
   const [isNofication, setIsNofication] = useState(false);
@@ -42,8 +54,9 @@ const Header = () => {
     setIsNewGroup((prev) => !prev);
   }
 
-  function handleLogOut() {
+  async function handleLogOut() {
     console.log("click on handleLogOut");
+    dispatch(userLogout(token, dispatch, navigate));
   }
 
   function handleNotification() {
@@ -52,13 +65,14 @@ const Header = () => {
   }
 
   return (
-    <>
-      <Box flexGrow={1}>
-        <AppBar position="static" sx={{ bgcolor: orange }}>
+    <div className=" z-100 shadow-xl ">
+      <Box flexGrow={0} sx={{}}>
+        <AppBar position="fixed" sx={{ bgcolor: orange }}>
           <Toolbar
             sx={{
               display: "flex",
               justifyContent: "space-between",
+              zIndex: 100,
             }}
           >
             <div>
@@ -130,11 +144,11 @@ const Header = () => {
         <Suspense fallback={<Backdrop open />}>
           <NotificationDialog
             open={isNofication}
-            handleNotification = {handleNotification}
+            handleNotification={handleNotification}
           />
         </Suspense>
       )}
-    </>
+    </div>
   );
 };
 
