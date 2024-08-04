@@ -33,6 +33,7 @@ const newUser = TryCatch(async (req, res, next) => {
     username: username,
     password: password,
     avatar: avatar,
+    bio: bio,
   });
 
   sendToken(res, newUser, 201, "User Created!!!");
@@ -52,11 +53,21 @@ const login = TryCatch(async (req, res, next) => {
 
 const getMyProfile = TryCatch(async (req, res, next) => {
   const user = await User.findById(req.userId);
+  if (!user) return next(new ErrorHnadle("User Not Found", 404));
+  const userUpdatedData = {
+    _id: user._id,
+    name: user.name,
+    username: user.username,
+    avatar: [user.avatar.url],
+    bio: user.bio,
+    createdAt: user.createdAt,
+  };
+  console.log(userUpdatedData);
 
   res.status(200).json({
     success: true,
     message: "Get My Profile Successful!!!",
-    data: user,
+    data: userUpdatedData,
   });
 });
 
