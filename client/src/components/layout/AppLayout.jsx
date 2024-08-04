@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Header from "./Header";
 import Title from "../shared/Title";
 import { Grid } from "@mui/material";
@@ -8,18 +8,47 @@ import { sampleChats, sampleUser } from "../constant/sampleData";
 import { useParams } from "react-router-dom";
 import Profile from "../specific/Profile";
 import GroupChatEditList from "../editGroup/GroupChatEditList";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../operation/reducer/userSlice";
+import { getUser } from "../../operation/apiController/userApi";
 
 const AppLayout =
   () =>
   (WrappedCommponent, isGroupEdit = false) => {
     return (props) => {
       const params = useParams();
+      const dispatch = useDispatch();
       const chatId = params.chatId;
+      const [userJoin, setUserJoin] = useState(null);
+      const [user, setUser] = useState(sampleUser);
+      const { loading } = useSelector((state) => state.user);
 
       const handleDeleteChat = (e, _id, groupChat) => {
         e.preventDefault();
         console.log("Chat Delete", _id, groupChat);
       };
+
+      useEffect(() => {
+        const fetchCurrentUser = async () => {
+          dispatch(setLoading(true));
+          const data = await getUser();
+          setUser(data);
+          dispatch(setLoading(false));
+        };
+        fetchCurrentUser();
+        const fetChats = async () => {
+          
+        };
+      }, []);
+
+      if (loading) {
+        return (
+          <>
+            <Title title="Chat App" />
+            <Loader />
+          </>
+        );
+      }
 
       return (
         <div>
@@ -80,7 +109,7 @@ const AppLayout =
                     height={"100%"}
                     className="bg-black bg-opacity-95 text-white"
                   >
-                    <Profile user={sampleUser} />
+                    <Profile user={user} />
                   </Grid>
                 )}
               </Grid>

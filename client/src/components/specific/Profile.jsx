@@ -5,23 +5,19 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { calculateTimeSpam } from "../../lib/CalculateTimeSpam";
 import { sampleUser } from "../constant/sampleData";
 import { getUser } from "../../operation/apiController/userApi";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../operation/reducer/userSlice";
 
-const Profile = () => {
-  const [user, setUser] = useState(sampleUser);
-  const userJoin = calculateTimeSpam(user.createdAt);
-
-  useEffect(async () => {
-    const userData = await getUser();
-    console.log(userData);
-    console.log(user);
-  }, []);
+const Profile = ({ user }) => {
+  const joinDate = new Date(user.createdAt);
+  const userJoin = calculateTimeSpam(joinDate);
 
   return (
     <div className="flex flex-col items-center gap-6 h-full pt-6">
       <div>
         <img
           src={user.avatar[0]}
-          className=" w-[200px] h-[200px] rounded-full border-[4px] border-gray-100 "
+          className=" w-[200px] h-[200px] object-cover rounded-full border-[4px] border-gray-100 "
         />
       </div>
 
