@@ -62,7 +62,6 @@ const getMyProfile = TryCatch(async (req, res, next) => {
     bio: user.bio,
     createdAt: user.createdAt,
   };
-  console.log(userUpdatedData);
 
   res.status(200).json({
     success: true,
