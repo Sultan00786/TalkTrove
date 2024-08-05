@@ -4,7 +4,8 @@ import { userApiUrl } from "../apiUrl";
 import toast from "react-hot-toast";
 import { setToken, setUser } from "../reducer/userSlice";
 
-const { NEW_USER_SIGN_UP, USER_LOGIN, USER_LOGOUT, GET_USER } = userApiUrl;
+const { NEW_USER_SIGN_UP, USER_LOGIN, USER_LOGOUT, GET_USER, SEARCH_USER } =
+  userApiUrl;
 
 export const newUser = async (data, navigate) => {
   const toastId = toast.loading("Loading...");
@@ -62,6 +63,22 @@ export const userLogout = async (token, dispatch, navigate) => {
 };
 
 export const getUser = async () => {
-  const response = await apiConnector("GET", GET_USER);
-  return response.data.data;
+  try {
+    const response = await apiConnector("GET", GET_USER);
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const userSearching = async (searchValue) => {
+  try {
+    const response = await apiConnector(
+      "GET",
+      SEARCH_USER + `?name=${searchValue}`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+  }
 };

@@ -9,15 +9,26 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { sampleChats } from "../constant/sampleData";
+import { userSearching } from "../../operation/apiController/userApi";
 
 function SearchDialog({ open, handleSearch }) {
-  const users = sampleChats;
+  const [newUsers, setNewUsers] = useState([]);
 
   const handler = (e) => {
     e.preventDefault();
     // This will stop the click event from reaching the Dialog's onClick
     e.stopPropagation();
   };
+
+  const handleSearchUser = async (e) => {
+    const searchValue = e.target.value;
+    let filteredUsers = [];
+    if (searchValue.length > 0)
+      filteredUsers = await userSearching(searchValue);
+    console.log(filteredUsers);
+    setNewUsers(filteredUsers);
+  };
+
   return (
     <div>
       <Dialog onClick={handleSearch} open={open}>
@@ -35,15 +46,16 @@ function SearchDialog({ open, handleSearch }) {
               ),
             }}
             className=" px-6 bor w-full rounded-sm"
+            onChange={handleSearchUser}
           ></TextField>
           <div className=" w-full px-16 pt-3 flex flex-col gap-4">
-            {users.map((user) => (
+            {newUsers.map((user) => (
               <div className="flex items-center justify-between">
                 <div className=" flex items-center gap-3">
                   <img
-                    src={user.avatar[0]}
+                    src={user.avatar}
                     alt=""
-                    className="w-9 h-9 rounded-full  "
+                    className="w-9 h-9 rounded-full object-cover "
                   />{" "}
                   <p>{user.name}</p>
                 </div>

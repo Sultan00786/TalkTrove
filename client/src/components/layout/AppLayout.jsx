@@ -36,7 +36,6 @@ const AppLayout =
           if (data) setUserData(data);
 
           const allChats = await getAllUserChats();
-          console.log(allChats);
           if (allChats) setChatList(allChats);
 
           setLoading(false);
