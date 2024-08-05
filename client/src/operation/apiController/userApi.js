@@ -4,7 +4,7 @@ import { userApiUrl } from "../apiUrl";
 import toast from "react-hot-toast";
 import { setToken, setUser } from "../reducer/userSlice";
 
-const { NEW_USER_SIGN_UP, USER_LOGIN, USER_LOGOUT } = userApiUrl;
+const { NEW_USER_SIGN_UP, USER_LOGIN, USER_LOGOUT, GET_USER } = userApiUrl;
 
 export const newUser = async (data, navigate) => {
   const toastId = toast.loading("Loading...");
@@ -49,14 +49,19 @@ export const loginUser = async (data, dispatch, navigate) => {
 export const userLogout = async (token, dispatch, navigate) => {
   try {
     const response = await apiConnector("POST", USER_LOGOUT);
+    if (!response) throw new Error("Response is not found ", response);
     dispatch(setUser(null));
     dispatch(setToken(null));
     localStorage.clear();
-    console.log(response);
     navigate("/");
     toast.success("Logged out successfully");
   } catch (error) {
     toast.error("Something went wrong while Logging out");
     console.log(error);
   }
+};
+
+export const getUser = async () => {
+  const response = await apiConnector("GET", GET_USER);
+  return response.data.data;
 };

@@ -1,25 +1,57 @@
-import React, { Suspense } from "react";
-import Header from "./Header";
-import Title from "../shared/Title";
 import { Grid } from "@mui/material";
-import Loader from "./Loader";
-import ChatList from "../specific/ChatList";
-import { sampleChats, sampleUser } from "../constant/sampleData";
+import React, { Suspense, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import Profile from "../specific/Profile";
+import { getAllUserChats } from "../../operation/apiController/chatApi";
+import { getUser } from "../../operation/apiController/userApi";
+import { sampleChats, sampleUser } from "../constant/sampleData";
 import GroupChatEditList from "../editGroup/GroupChatEditList";
+import Title from "../shared/Title";
+import ChatList from "../specific/ChatList";
+import Profile from "../specific/Profile";
+import Header from "./Header";
+import Loader from "./Loader";
 
 const AppLayout =
   () =>
   (WrappedCommponent, isGroupEdit = false) => {
     return (props) => {
       const params = useParams();
+      const dispatch = useDispatch();
       const chatId = params.chatId;
+      const [userData, setUserData] = useState(sampleUser);
+      const [chatList, setChatList] = useState(sampleChats);
+      const [loading, setLoading] = useState(false);
 
       const handleDeleteChat = (e, _id, groupChat) => {
         e.preventDefault();
         console.log("Chat Delete", _id, groupChat);
       };
+
+      useEffect(() => {
+        const fetchCurrentUserAndAllChats = async () => {
+          setLoading(true);
+
+          const data = await getUser();
+          if (data) setUserData(data);
+
+          const allChats = await getAllUserChats();
+          console.log(allChats);
+          if (allChats) setChatList(allChats);
+
+          setLoading(false);
+        };
+        fetchCurrentUserAndAllChats();
+      }, []);
+
+      if (loading) {
+        return (
+          <>
+            <Title title="Chat App" />
+            <Loader />
+          </>
+        );
+      }
 
       return (
         <div>
@@ -51,7 +83,7 @@ const AppLayout =
                     <GroupChatEditList />
                   ) : (
                     <ChatList
-                      chats={sampleChats}
+                      chats={chatList}
                       chatId={chatId}
                       handleDeleteChat={handleDeleteChat}
                     />
@@ -80,7 +112,7 @@ const AppLayout =
                     height={"100%"}
                     className="bg-black bg-opacity-95 text-white"
                   >
-                    <Profile user={sampleUser} />
+                    <Profile user={userData} />
                   </Grid>
                 )}
               </Grid>

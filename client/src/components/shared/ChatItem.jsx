@@ -16,11 +16,12 @@ function ChatItem({
 }) {
   return (
     <Link
+      className="w-full"
       to={`/chat/${_id}`}
       onContextMenu={(e) => handleDeleteChat(e, _id, groupChat)}
     >
       <div
-        className={`relative flex gap-3 px-3 py-3 cursor-pointer  ${
+        className={`relativeS flex gap-3 px-3 py-3 cursor-pointer  ${
           isChatOpen
             ? " bg-black text-white hover:bg-gray-900"
             : "hover:bg-gray-300"
@@ -28,7 +29,7 @@ function ChatItem({
       >
         <AvatarCard avatar={avatar} />
         <div className="flex items-center justify-between">
-          <div className="font-semibold ">{name}</div>
+          <div className="font-semibold text-lg pl-2">{name}</div>
           {newMessageAlert && (
             <div className=" text-xs font-semibold pr-2">
               {newMessageAlert?.count} New Message

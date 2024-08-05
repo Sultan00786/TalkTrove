@@ -16,7 +16,7 @@ function ChatList({
   handleDeleteChat,
 }) {
   return (
-    <Stack width={w} direction={"column"}>
+    <div className="flex flex-col items-center overflow-y-scroll h-full w-full">
       {chats.map((data, index) => {
         const { name, isGroupChat, avatar, members, _id } = data;
         const newMessageAlert = newMessagesAlert.find((i) => i.chatId === _id);
@@ -39,7 +39,7 @@ function ChatList({
           />
         );
       })}
-    </Stack>
+    </div>
   );
 }
 
