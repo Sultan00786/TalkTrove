@@ -3,13 +3,13 @@ import React from "react";
 function AvatarCard({ avatar }) {
   return (
     <div>
-      <div className={`relative ${avatar.length === 1 ? "w-10" : "w-16"} h-10`}>
+      <div className={`relative w-16 h-12`}>
         {avatar.map((data, index) => {
           const left = `left-[${index - 0.5}rem] z-[${avatar.length - index}] `;
           return (
             <div
               key={index}
-              className={`absolute ${left} w-10 h-10 rounded-full border-[3px] border-gray-200 shadow-md `}
+              className={`absolute ${left} w-12 h-12 rounded-full border-[3px] border-gray-200 shadow-md `}
             >
               <img
                 key={index}
