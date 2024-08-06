@@ -7,7 +7,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { Suspense, lazy, useState } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { orange } from "../constant/color";
 import {
   Add,
@@ -27,7 +27,7 @@ import {
 } from "../../operation/reducer/userSlice";
 import { apiConnector } from "../../operation/apiConnect";
 import { userApiUrl } from "../../operation/apiUrl";
-import { userLogout } from "../../operation/apiController/userApi";
+import { getAllNotification, userLogout } from "../../operation/apiController/userApi";
 import Loader from "./Loader";
 
 const SearchDialog = lazy(() => import("../specific/SearchDialog"));
@@ -41,6 +41,15 @@ const Header = () => {
   const [isSearch, setIsSearch] = useState(false);
   const [isNewGroup, setIsNewGroup] = useState(false);
   const [isNofication, setIsNofication] = useState(false);
+  const [notificatnReq, setNotificatnReq] = useState([]);
+
+  useEffect(() => {
+    const fetchAllNotification = async () => {
+      const result = await getAllNotification()
+      setNotificatnReq(result);
+    };
+    fetchAllNotification();
+  }, []);
 
   function handleMobile() {
     console.log("click on handleMobile");
@@ -145,6 +154,7 @@ const Header = () => {
           <NotificationDialog
             open={isNofication}
             handleNotification={handleNotification}
+            notificatnReq={notificatnReq}
           />
         </Suspense>
       )}

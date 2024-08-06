@@ -11,6 +11,8 @@ const {
   GET_USER,
   SEARCH_USER,
   SEND_FRIEND_REQUEST,
+  NOTIFICATION,
+  ACCEPT_FRINEDD_REQUEST,
 } = userApiUrl;
 
 export const newUser = async (data, navigate) => {
@@ -94,6 +96,30 @@ export const sendFriendRequest = async (data) => {
     const response = await apiConnector("PUT", SEND_FRIEND_REQUEST, data);
     if (response.status === 200) toast.success("Friend Request Sent");
     console.log(response.status);
+  } catch (error) {
+    console.error(error);
+    toast.error(error.response.data.message);
+  }
+};
+
+export const getAllNotification = async () => {
+  try {
+    const response = await apiConnector("GET", NOTIFICATION);
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const acceptFriendRequest = async (data, navigate) => {
+  try {
+    const response = await apiConnector("PUT", ACCEPT_FRINEDD_REQUEST, data);
+    if (response.status === 200 && data.accept)
+      toast.success("Friend Request Accepted");
+    if (!data.accept)
+      toast.success("Friend Request Rejected");
+    console.log(response);
+    navigate("/");
   } catch (error) {
     console.error(error);
     toast.error(error.response.data.message);
