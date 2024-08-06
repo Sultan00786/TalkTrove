@@ -8,11 +8,15 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { sampleChats } from "../constant/sampleData";
-import { userSearching } from "../../operation/apiController/userApi";
+import {
+  sendFriendRequest,
+  userSearching,
+} from "../../operation/apiController/userApi";
+import { useDispatch } from "react-redux";
 
 function SearchDialog({ open, handleSearch }) {
   const [newUsers, setNewUsers] = useState([]);
+  const dispatch = useDispatch();
 
   const handler = (e) => {
     e.preventDefault();
@@ -25,8 +29,12 @@ function SearchDialog({ open, handleSearch }) {
     let filteredUsers = [];
     if (searchValue.length > 0)
       filteredUsers = await userSearching(searchValue);
-    console.log(filteredUsers);
     setNewUsers(filteredUsers);
+  };
+
+  const handleRequest = (senderToId) => {
+    console.log(senderToId);
+    dispatch(sendFriendRequest({ userId: senderToId }));
   };
 
   return (
@@ -59,7 +67,12 @@ function SearchDialog({ open, handleSearch }) {
                   />{" "}
                   <p>{user.name}</p>
                 </div>
-                <div className=" bg-blue-500 w-fit rounded-full hover:bg-blue-600 ">
+                <div
+                  onClick={() => {
+                    handleRequest(user._id);
+                  }}
+                  className=" bg-blue-500 w-fit rounded-full hover:bg-blue-600 "
+                >
                   <IconButton className=" w-8 h-8 ">
                     <Add className=" text-white" />
                   </IconButton>
