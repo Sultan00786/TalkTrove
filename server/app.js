@@ -20,6 +20,7 @@ import { Message } from "./models/message.js";
 import { getSockets } from "./lib/helper.js";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
+import { socketAuthenticator } from "./middlewares/isAuthenticat.js";
 
 dotenv.config({
   path: "./.env",
@@ -30,7 +31,13 @@ const mongoDbUrl = process.env.MONGODB_URI;
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server, {});
+const io = new Server(server, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST", "PUT"],
+    credentials: true,
+  },
+});
 const userSocketIds = new Map();
 const corsOptions = {
   origin: process.env.CLIENT_URL,
@@ -38,6 +45,7 @@ const corsOptions = {
 };
 
 connectDB(mongoDbUrl);
+app.use(cookieParser());
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -47,21 +55,24 @@ cloudinary.config({
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cookieParser());
 
 app.use("/user", userRouter);
 app.use("/chat", chatRouter);
 app.use("/admin", adminRouter);
 
-app.use(errorMiddleware);
+io.use((socket, next) => {
+  cookieParser()(
+    socket.request,
+    socket.request.res,
+    async (err) => await socketAuthenticator(err, socket, next)
+  );
+});
 
 io.on("connection", (socket) => {
-  const user = {
-    _id: "XXXXXXXX",
-    name: "John Doe",
-  };
+  const user = socket.user;
   userSocketIds.set(user._id.toString(), socket.id);
   console.log(`User ${socket.id} is connected`);
+  console.log(user);
 
   socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
     const messageForRealTime = {
@@ -99,6 +110,8 @@ io.on("connection", (socket) => {
     userSocketIds.delete(user._id.toString());
   });
 });
+
+app.use(errorMiddleware);
 
 server.listen(port, () => {
   console.log(
