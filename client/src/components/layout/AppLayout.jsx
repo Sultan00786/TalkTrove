@@ -12,6 +12,7 @@ import Profile from "../specific/Profile";
 import Header from "./Header";
 import Loader from "./Loader";
 import { io } from "socket.io-client";
+import { setSocket } from "../../operation/reducer/socketSlice";
 
 const AppLayout =
   () =>
@@ -23,7 +24,16 @@ const AppLayout =
       const [userData, setUserData] = useState(sampleUser);
       const [chatList, setChatList] = useState(sampleChats);
       const [loading, setLoading] = useState(false);
-      const socket = useMemo(() => io(import.meta.env.VITE_BASE_SERVER));
+      const socket = useMemo(() =>
+        io(
+          import.meta.env.VITE_BASE_SERVER,
+          {
+            withCredentials: true,
+          },
+          []
+        )
+      );
+      dispatch(setSocket(socket));
 
       const handleDeleteChat = (e, _id, groupChat) => {
         e.preventDefault();
