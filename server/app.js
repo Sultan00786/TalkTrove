@@ -72,7 +72,6 @@ io.on("connection", (socket) => {
   const user = socket.user;
   userSocketIds.set(user._id.toString(), socket.id);
   console.log(`User ${socket.id} is connected`);
-  console.log(user);
 
   socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
     const messageForRealTime = {
@@ -91,18 +90,28 @@ io.on("connection", (socket) => {
       chat: chatId,
     };
 
-    const onlineMembersSockets = getSockets(members);
-    io.to(onlineMembersSockets).emit(NEW_MESSAGE, {
-      chatId,
-      message: NEW_MESSAGE,
-    });
-    io.to(onlineMembersSockets).emit(NEW_MESSAGE_ALERT, { chatId });
+    // console.log(messageForRealTime);
+    // console.log(members);
 
+    let result = null;
     try {
-      await Message.create(messageForDB);
+      result = await Message.create(messageForDB)
+        .then((createdMessage) => {
+          return Message.populate(createdMessage, { path: "sender" });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      console.log(result);
     } catch (error) {
       console.log(error);
     }
+
+    const onlineMembersSockets = getSockets(members);
+    io.to(onlineMembersSockets).emit(NEW_MESSAGE, {
+      data: result,
+    });
+    io.to(onlineMembersSockets).emit(NEW_MESSAGE_ALERT, { chatId });
   });
 
   socket.on("disconnect", () => {
