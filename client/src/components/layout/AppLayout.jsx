@@ -1,8 +1,11 @@
 import { Grid } from "@mui/material";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getAllUserChats } from "../../operation/apiController/chatApi";
+import {
+  getAllUserChats,
+  getChatDetails,
+} from "../../operation/apiController/chatApi";
 import { getUser } from "../../operation/apiController/userApi";
 import { sampleChats, sampleUser } from "../constant/sampleData";
 import GroupChatEditList from "../editGroup/GroupChatEditList";
@@ -11,6 +14,8 @@ import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
 import Header from "./Header";
 import Loader from "./Loader";
+import { io } from "socket.io-client";
+import { setSocket } from "../../operation/reducer/socketSlice";
 
 const AppLayout =
   () =>
@@ -21,7 +26,18 @@ const AppLayout =
       const chatId = params.chatId;
       const [userData, setUserData] = useState(sampleUser);
       const [chatList, setChatList] = useState(sampleChats);
+      const [members, setMembers] = useState([]);
       const [loading, setLoading] = useState(false);
+      const socket = useMemo(() =>
+        io(
+          import.meta.env.VITE_BASE_SERVER,
+          {
+            withCredentials: true,
+          },
+          []
+        )
+      );
+      dispatch(setSocket(socket));
 
       const handleDeleteChat = (e, _id, groupChat) => {
         e.preventDefault();
@@ -36,12 +52,20 @@ const AppLayout =
           if (data) setUserData(data);
 
           const allChats = await getAllUserChats();
-          console.log(allChats);
           if (allChats) setChatList(allChats);
 
           setLoading(false);
         };
         fetchCurrentUserAndAllChats();
+
+        const fetchChatdetails = async () => {
+          setLoading(true);
+          const result = await getChatDetails(chatId);
+          // console.log("Chat Details", result.members);
+          setMembers(result.members);
+          setLoading(false);
+        };
+        if (chatId) fetchChatdetails();
       }, []);
 
       if (loading) {
@@ -98,7 +122,11 @@ const AppLayout =
                   md={5}
                   height={"100%"}
                 >
-                  <WrappedCommponent {...props} />
+                  <WrappedCommponent
+                    {...props}
+                    chatId={chatId}
+                    members={members}
+                  />
                 </Grid>
 
                 {!isGroupEdit && (

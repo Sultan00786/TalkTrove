@@ -1,22 +1,30 @@
-import { Add, Search } from "@mui/icons-material";
-import {
-  Dialog,
-  IconButton,
-  InputAdornment,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
-import React, { useState } from "react";
-import { sampleChats } from "../constant/sampleData";
 import { Check, Clear } from "@mui/icons-material";
+import { Dialog, IconButton, Typography } from "@mui/material";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { acceptFriendRequest } from "../../operation/apiController/userApi";
+import { useNavigate } from "react-router-dom";
 
-function NotificationDialog({ handleNotification, open }) {
-  const users = sampleChats;
+function NotificationDialog({ handleNotification, open, notificatnReq }) {
+  console.log(notificatnReq);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handler = (e) => {
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  const handleRequestAccept = async (requestId, accept) => {
+    dispatch(
+      acceptFriendRequest(
+        {
+          requestId: requestId,
+          accept: accept,
+        },
+        navigate
+      )
+    );
   };
   return (
     <div>
@@ -27,23 +35,35 @@ function NotificationDialog({ handleNotification, open }) {
         >
           <Typography variant="h6">Notification</Typography>
           <div className=" w-full px-16 pt-3 flex flex-col gap-4">
-            {users.map((user) => (
+            {notificatnReq.map((notification) => (
               <div className="flex items-center justify-between">
                 <div className=" flex items-center gap-3">
                   <img
-                    src={user.avatar[0]}
+                    src={notification.sender.avatar}
                     alt=""
                     className="w-8 h-8 rounded-full border-[1px] shadow-sm border-gray-200 "
                   />{" "}
-                  <p>{user.name}</p>
+                  <p>{notification.sender.name}</p>
                 </div>
                 <div className=" flex items-center gap-3">
-                  <div className=" bg-green-500 w-fit rounded-full hover:bg-green-600 ">
+                  <div
+                    onClick={() => {
+                      console.log("green");
+                      handleRequestAccept(notification._id, true);
+                    }}
+                    className=" bg-green-500 w-fit rounded-full hover:bg-green-600 "
+                  >
                     <IconButton className=" w-7 h-7 flex items-center justify-center ">
                       <Check fontSize="small" className=" text-white" />
                     </IconButton>
                   </div>
-                  <div className=" bg-red-500 w-fit rounded-full hover:bg-red-600 ">
+                  <div
+                    onClick={() => {
+                      console.log("red");
+                      handleRequestAccept(notification._id, false);
+                    }}
+                    className=" bg-red-500 w-fit rounded-full hover:bg-red-600 "
+                  >
                     <IconButton className=" w-7 h-7 flex items-center justify-center ">
                       <Clear fontSize="small" className=" text-white" />
                     </IconButton>

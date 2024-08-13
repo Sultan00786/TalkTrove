@@ -7,7 +7,7 @@ function MessageBox({ message, userId }) {
   return (
     <div
       className={` flex items-start gap-4  px-3 py-2 rounded-lg ${
-        message.sender === userId
+        message.sender._id === userId
           ? "bg-gray-100 text-gray-950 self-end max-w-[55%]"
           : "bg-gray-950 text-gray-100 max-w-[59%]"
       }`}

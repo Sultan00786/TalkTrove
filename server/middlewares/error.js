@@ -17,7 +17,8 @@ const errorMiddleware = (err, req, res, next) => {
   return res.status(err.statusCode).json({
     success: false,
     // for development mode only ke liye "DEVELOPMENT" === process.env.NODE_ENV.trim() rahega then pura error show karna hie nahi to only err.message
-    message: "DEVELOPMENT" === process.env.NODE_ENV.trim() ? err : err.message,
+    // message: "DEVELOPMENT" === process.env.NODE_ENV.trim() ? err : err.message,
+    message: err.message,
     errorCode: err.code,
   });
 };

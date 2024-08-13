@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { ErrorHnadle } from "../utils/utility.js";
 import { TryCatch } from "./error.js";
+import { User } from "../models/user.js";
 
 const isAuthenticat = TryCatch(async (req, res, next) => {
   let { ChatApp_token } = req.cookies;
@@ -26,4 +27,23 @@ const adminOnly = TryCatch(async (req, res, next) => {
   next();
 });
 
-export { isAuthenticat, adminOnly };
+const socketAuthenticator = async (err, socket, next) => {
+  try {
+    if (err) return next(err);
+
+    const authToken = socket.request.cookies["ChatApp_token"];
+    if (!authToken) return next(new ErrorHnadle("User not login", 401));
+    const decodedData = jwt.verify(authToken, process.env.JWT_SECRET);
+
+    const user = await User.findById(decodedData._id);
+    if (!user) return next(new ErrorHnadle("User not found", 404));
+
+    socket.user = user;
+    return next();
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorHnadle("User not login", 401));
+  }
+};
+
+export { isAuthenticat, adminOnly, socketAuthenticator };

@@ -8,16 +8,35 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { sampleChats } from "../constant/sampleData";
+import {
+  sendFriendRequest,
+  userSearching,
+} from "../../operation/apiController/userApi";
+import { useDispatch } from "react-redux";
 
 function SearchDialog({ open, handleSearch }) {
-  const users = sampleChats;
+  const [newUsers, setNewUsers] = useState([]);
+  const dispatch = useDispatch();
 
   const handler = (e) => {
     e.preventDefault();
     // This will stop the click event from reaching the Dialog's onClick
     e.stopPropagation();
   };
+
+  const handleSearchUser = async (e) => {
+    const searchValue = e.target.value;
+    let filteredUsers = [];
+    if (searchValue.length > 0)
+      filteredUsers = await userSearching(searchValue);
+    setNewUsers(filteredUsers);
+  };
+
+  const handleRequest = (senderToId) => {
+    console.log(senderToId);
+    dispatch(sendFriendRequest({ userId: senderToId }));
+  };
+
   return (
     <div>
       <Dialog onClick={handleSearch} open={open}>
@@ -35,19 +54,25 @@ function SearchDialog({ open, handleSearch }) {
               ),
             }}
             className=" px-6 bor w-full rounded-sm"
+            onChange={handleSearchUser}
           ></TextField>
           <div className=" w-full px-16 pt-3 flex flex-col gap-4">
-            {users.map((user) => (
+            {newUsers.map((user) => (
               <div className="flex items-center justify-between">
                 <div className=" flex items-center gap-3">
                   <img
-                    src={user.avatar[0]}
+                    src={user.avatar}
                     alt=""
-                    className="w-9 h-9 rounded-full  "
+                    className="w-9 h-9 rounded-full object-cover "
                   />{" "}
                   <p>{user.name}</p>
                 </div>
-                <div className=" bg-blue-500 w-fit rounded-full hover:bg-blue-600 ">
+                <div
+                  onClick={() => {
+                    handleRequest(user._id);
+                  }}
+                  className=" bg-blue-500 w-fit rounded-full hover:bg-blue-600 "
+                >
                   <IconButton className=" w-8 h-8 ">
                     <Add className=" text-white" />
                   </IconButton>
