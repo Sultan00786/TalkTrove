@@ -14,12 +14,18 @@ export const getAllUserChats = async (data) => {
   }
 };
 
-export const getChatDetails = async (chatId) => {
+export const getChatDetails = async (chatId, navigate) => {
   try {
     const response = await apiConnector("GET", `${GET_CHAT_DETAILS}/${chatId}`);
+    console.log(response);
     return response.data.data;
   } catch (error) {
-    console.error(error);
+    console.error(error.response.status);
+    if (error.response.status === 400) {
+      console.log("Chat not found");
+      navigate("/notFound");
+      toast.error("Chat not found");
+    }
     return error;
   }
 };

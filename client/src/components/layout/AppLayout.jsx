@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getAllUserChats,
   getChatDetails,
@@ -23,6 +23,7 @@ const AppLayout =
     return (props) => {
       const params = useParams();
       const dispatch = useDispatch();
+      const navigate = useNavigate();
       const chatId = params.chatId;
       const [userData, setUserData] = useState(sampleUser);
       const [chatList, setChatList] = useState(sampleChats);
@@ -60,7 +61,7 @@ const AppLayout =
 
         const fetchChatdetails = async () => {
           setLoading(true);
-          const result = await getChatDetails(chatId);
+          const result = await getChatDetails(chatId, navigate);
           // console.log("Chat Details", result.members);
           setMembers(result.members);
           setLoading(false);
