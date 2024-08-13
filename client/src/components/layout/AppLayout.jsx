@@ -2,7 +2,10 @@ import { Grid } from "@mui/material";
 import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getAllUserChats } from "../../operation/apiController/chatApi";
+import {
+  getAllUserChats,
+  getChatDetails,
+} from "../../operation/apiController/chatApi";
 import { getUser } from "../../operation/apiController/userApi";
 import { sampleChats, sampleUser } from "../constant/sampleData";
 import GroupChatEditList from "../editGroup/GroupChatEditList";
@@ -23,6 +26,7 @@ const AppLayout =
       const chatId = params.chatId;
       const [userData, setUserData] = useState(sampleUser);
       const [chatList, setChatList] = useState(sampleChats);
+      const [members, setMembers] = useState([]);
       const [loading, setLoading] = useState(false);
       const socket = useMemo(() =>
         io(
@@ -53,6 +57,15 @@ const AppLayout =
           setLoading(false);
         };
         fetchCurrentUserAndAllChats();
+
+        const fetchChatdetails = async () => {
+          setLoading(true);
+          const result = await getChatDetails(chatId);
+          // console.log("Chat Details", result.members);
+          setMembers(result.members);
+          setLoading(false);
+        };
+        if (chatId) fetchChatdetails();
       }, []);
 
       if (loading) {
@@ -109,7 +122,11 @@ const AppLayout =
                   md={5}
                   height={"100%"}
                 >
-                  <WrappedCommponent {...props} />
+                  <WrappedCommponent
+                    {...props}
+                    chatId={chatId}
+                    members={members}
+                  />
                 </Grid>
 
                 {!isGroupEdit && (
