@@ -2,7 +2,7 @@ import { toast } from "react-hot-toast";
 import { apiConnector } from "../apiConnect";
 import { chatApiUrl } from "../apiUrl";
 
-const { GET_ALL_CHAT, GET_CHAT_DETAILS } = chatApiUrl;
+const { GET_ALL_CHAT, GET_CHAT_DETAILS, GET_MESSAGES } = chatApiUrl;
 
 export const getAllUserChats = async (data) => {
   try {
@@ -17,7 +17,6 @@ export const getAllUserChats = async (data) => {
 export const getChatDetails = async (chatId, navigate) => {
   try {
     const response = await apiConnector("GET", `${GET_CHAT_DETAILS}/${chatId}`);
-    console.log(response);
     return response.data.data;
   } catch (error) {
     console.error(error.response.status);
@@ -26,6 +25,22 @@ export const getChatDetails = async (chatId, navigate) => {
       navigate("/notFound");
       toast.error("Chat not found");
     }
+    return error;
+  }
+};
+
+export const getOldMessages = async (chatId, page) => {
+  try {
+    const response = await apiConnector(
+      "GET",
+      GET_MESSAGES + `/${chatId}`,
+      null,
+      { page: page }
+    );
+    if (!response) throw new Error("Failed to fetch messages");
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
     return error;
   }
 };
