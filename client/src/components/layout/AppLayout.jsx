@@ -21,14 +21,19 @@ const AppLayout =
   () =>
   (WrappedCommponent, isGroupEdit = false) => {
     return (props) => {
-      const params = useParams();
       const dispatch = useDispatch();
       const navigate = useNavigate();
-      const chatId = params.chatId;
+      const params = useParams();
+
       const [userData, setUserData] = useState(sampleUser);
       const [chatList, setChatList] = useState(sampleChats);
+
       const [members, setMembers] = useState([]);
+
       const [loading, setLoading] = useState(false);
+
+      const chatId = params.chatId;
+
       const socket = useMemo(() =>
         io(
           import.meta.env.VITE_BASE_SERVER,
