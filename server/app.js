@@ -71,7 +71,6 @@ io.use((socket, next) => {
 io.on("connection", (socket) => {
   const user = socket.user;
   userSocketIds.set(user._id.toString(), socket.id);
-  console.log(`User ${socket.id} is connected`);
 
   socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
     const messageForRealTime = {
@@ -102,7 +101,6 @@ io.on("connection", (socket) => {
         .catch((err) => {
           console.error(err);
         });
-      console.log(result);
     } catch (error) {
       console.log(error);
     }
@@ -115,7 +113,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log(`User ${socket.id} is disconnected`);
     userSocketIds.delete(user._id.toString());
   });
 });

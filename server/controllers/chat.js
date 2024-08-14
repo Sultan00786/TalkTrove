@@ -365,6 +365,7 @@ const getMessages = TryCatch(async (req, res, next) => {
 
   const [messages, total] = await Promise.all([
     Message.find({ chat: chatId })
+      .populate("sender", "name avatar")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(resultParPage)
