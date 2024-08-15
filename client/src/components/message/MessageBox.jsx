@@ -1,7 +1,7 @@
 import React from "react";
 
 function MessageBox({ message, userId }) {
-  //   console.log(message);
+    console.log(message);
   const isEqualUser = message.sender._id === userId;
   const avatar = message?.sender?.avatar?.url;
   return (

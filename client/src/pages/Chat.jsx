@@ -38,7 +38,6 @@ function Chat({ chatId, members }) {
   const fetchOldMessages = async () => {
     const result = await getOldMessages(chatId);
     if (result.messages) setOldMessages(result.messages);
-    console.log("result", result);
   };
 
   useEffect(() => {
