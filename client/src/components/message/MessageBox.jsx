@@ -21,7 +21,7 @@ function MessageBox({ message, userId }) {
           />
         </div>
       )}
-      <p className=" w-fit">{message.content}</p>
+      <p className=" w-fit whitespace-normal break-all">{message.content}</p>
     </div>
   );
 }

@@ -42,7 +42,6 @@ const getMyChats = TryCatch(async (req, res, next) => {
     "members",
     "name avatar"
   );
-  console.log(chats[1].members);
 
   if (!chats) {
     return next(new ErrorHnadle("User chat not found", 404));
@@ -69,8 +68,6 @@ const getMyChats = TryCatch(async (req, res, next) => {
             .map((user) => user._id),
     };
   });
-
-  console.log(transformChats);
 
   res.status(200).json({
     success: true,
@@ -193,7 +190,6 @@ const removeMember = TryCatch(async (req, res, next) => {
 
 const leaveGroup = TryCatch(async (req, res, next) => {
   const chatId = req.params.id;
-  console.log(chatId);
 
   const chat = await Chat.findById(chatId);
 
