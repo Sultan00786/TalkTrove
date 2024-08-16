@@ -42,26 +42,35 @@ const getMyChats = TryCatch(async (req, res, next) => {
     "members",
     "name avatar"
   );
+  console.log(chats[1].members);
 
   if (!chats) {
     return next(new ErrorHnadle("User chat not found", 404));
   }
 
   const transformChats = chats.map(({ _id, name, groupChat, members }) => {
+    let friendUser = [];
+    if (!groupChat) {
+      friendUser = members.filter(
+        (member) => member._id.toString() !== req.userId.toString()
+      );
+    }
     return {
       _id: _id,
       groupChat: groupChat,
-      name: groupChat ? name : members[0].name,
+      name: groupChat ? name : friendUser[0].name,
       avatar: !groupChat
-        ? [members[0].avatar.url]
+        ? [friendUser[0].avatar.url]
         : members.slice(0, 3).map((user) => user.avatar.url),
       members: !groupChat
-        ? [members[0]._id]
+        ? [friendUser[0]._id]
         : members
             .filter((user) => user._id.toString() !== req.userId)
             .map((user) => user._id),
     };
   });
+
+  console.log(transformChats);
 
   res.status(200).json({
     success: true,
