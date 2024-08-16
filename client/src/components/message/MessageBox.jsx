@@ -1,7 +1,7 @@
 import React from "react";
 
 function MessageBox({ message, userId }) {
-    console.log(message);
+  console.log(message);
   const isEqualUser = message.sender._id === userId;
   const avatar = message?.sender?.avatar?.url;
   return (
@@ -14,7 +14,11 @@ function MessageBox({ message, userId }) {
     >
       {!isEqualUser && (
         <div>
-          <img src={avatar} alt="" className=" w-[35px] rounded-full" />
+          <img
+            src={avatar}
+            alt=""
+            className=" w-[35px] rounded-full aspect-square object-cover"
+          />
         </div>
       )}
       <p className=" w-fit">{message.content}</p>
