@@ -27,6 +27,7 @@ const AppLayout =
 
       const [userData, setUserData] = useState(sampleUser);
       const [chatList, setChatList] = useState(sampleChats);
+      const [perticularChatId, setPerticularChatI] = useState("");
 
       const [members, setMembers] = useState([]);
 
@@ -72,7 +73,7 @@ const AppLayout =
           setLoading(false);
         };
         if (chatId) fetchChatdetails();
-      }, []);
+      }, [perticularChatId]);
 
       if (loading) {
         return (
@@ -116,6 +117,7 @@ const AppLayout =
                       chats={chatList}
                       chatId={chatId}
                       handleDeleteChat={handleDeleteChat}
+                      setPerticularChatI={setPerticularChatI}
                     />
                   )}
                 </Grid>

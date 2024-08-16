@@ -2,6 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 import AvatarCard from "./AvatarCard";
+import { useNavigate } from "react-router-dom";
 
 function ChatItem({
   avatar,
@@ -13,7 +14,15 @@ function ChatItem({
   newMessageAlert,
   index = 0,
   handleDeleteChat,
+  setPerticularChatI,
 }) {
+  const navigate = useNavigate();
+
+  const handlerClickOnFriendChat = () => {
+    console.log("clicked");
+    setPerticularChatI(_id);
+    navigate(`/chat/${_id}`);
+  };
   return (
     <Link
       className="w-full"
@@ -26,6 +35,7 @@ function ChatItem({
             ? " bg-black text-white hover:bg-gray-900"
             : "hover:bg-gray-300"
         }`}
+        onClick={handlerClickOnFriendChat}
       >
         <AvatarCard avatar={avatar} />
         <div className="flex items-center justify-between">
