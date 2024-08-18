@@ -15,5 +15,6 @@ export const userApiUrl = {
 export const chatApiUrl = {
   CREAT_NEW_GROUP: `${BASE}/chat/newGroup`,
   GET_ALL_CHAT: `${BASE}/chat/getMyChats`,
-  GET_CHAT_DETAILS : `${BASE}/chat`
+  GET_CHAT_DETAILS: `${BASE}/chat`,
+  GET_MESSAGES: `${BASE}/chat/messages`,
 };

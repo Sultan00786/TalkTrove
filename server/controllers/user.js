@@ -91,14 +91,17 @@ const searchUser = TryCatch(async (req, res, next) => {
   const chatMembers = chats.map((chat) => chat.members).flat();
   const membersExpectChatMembers = await User.find({
     _id: { $nin: chatMembers },
-    name: { $regex: name, $options: "i" },
+    username: { $regex: name, $options: "i" },
   });
 
-  const data = membersExpectChatMembers.map(({ _id, name, avatar }) => ({
-    _id,
-    name,
-    avatar: avatar.url,
-  }));
+  const data = membersExpectChatMembers.map(
+    ({ _id, name, avatar, username }) => ({
+      _id,
+      name,
+      username: username,
+      avatar: avatar.url,
+    })
+  );
 
   return res.status(200).json({
     success: true,

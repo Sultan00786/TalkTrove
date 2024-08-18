@@ -48,15 +48,21 @@ const getMyChats = TryCatch(async (req, res, next) => {
   }
 
   const transformChats = chats.map(({ _id, name, groupChat, members }) => {
+    let friendUser = [];
+    if (!groupChat) {
+      friendUser = members.filter(
+        (member) => member._id.toString() !== req.userId.toString()
+      );
+    }
     return {
       _id: _id,
       groupChat: groupChat,
-      name: groupChat ? name : members[0].name,
+      name: groupChat ? name : friendUser[0].name,
       avatar: !groupChat
-        ? [members[0].avatar.url]
+        ? [friendUser[0].avatar.url]
         : members.slice(0, 3).map((user) => user.avatar.url),
       members: !groupChat
-        ? [members[0]._id]
+        ? [friendUser[0]._id]
         : members
             .filter((user) => user._id.toString() !== req.userId)
             .map((user) => user._id),
@@ -184,7 +190,6 @@ const removeMember = TryCatch(async (req, res, next) => {
 
 const leaveGroup = TryCatch(async (req, res, next) => {
   const chatId = req.params.id;
-  console.log(chatId);
 
   const chat = await Chat.findById(chatId);
 
@@ -365,6 +370,7 @@ const getMessages = TryCatch(async (req, res, next) => {
 
   const [messages, total] = await Promise.all([
     Message.find({ chat: chatId })
+      .populate("sender", "name avatar")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(resultParPage)

@@ -29,6 +29,7 @@ function SearchDialog({ open, handleSearch }) {
     let filteredUsers = [];
     if (searchValue.length > 0)
       filteredUsers = await userSearching(searchValue);
+    console.log(filteredUsers);
     setNewUsers(filteredUsers);
   };
 
@@ -65,7 +66,7 @@ function SearchDialog({ open, handleSearch }) {
                     alt=""
                     className="w-9 h-9 rounded-full object-cover "
                   />{" "}
-                  <p>{user.name}</p>
+                  <p>{user.username}</p>
                 </div>
                 <div
                   onClick={() => {

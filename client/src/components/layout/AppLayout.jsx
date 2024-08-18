@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import React, { Suspense, useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getAllUserChats,
   getChatDetails,
@@ -16,18 +16,27 @@ import Header from "./Header";
 import Loader from "./Loader";
 import { io } from "socket.io-client";
 import { setSocket } from "../../operation/reducer/socketSlice";
+import { setLoading } from "../../operation/reducer/userSlice";
 
 const AppLayout =
   () =>
   (WrappedCommponent, isGroupEdit = false) => {
     return (props) => {
-      const params = useParams();
       const dispatch = useDispatch();
-      const chatId = params.chatId;
+      const navigate = useNavigate();
+      const params = useParams();
+
       const [userData, setUserData] = useState(sampleUser);
       const [chatList, setChatList] = useState(sampleChats);
+      const [perticularChatId, setPerticularChatI] = useState("");
+
       const [members, setMembers] = useState([]);
-      const [loading, setLoading] = useState(false);
+
+      // const [loading, setLoading] = useState(false);
+      const { loading } = useSelector((state) => state.user);
+
+      const chatId = params.chatId;
+
       const socket = useMemo(() =>
         io(
           import.meta.env.VITE_BASE_SERVER,
@@ -46,7 +55,7 @@ const AppLayout =
 
       useEffect(() => {
         const fetchCurrentUserAndAllChats = async () => {
-          setLoading(true);
+          dispatch(setLoading(true));
 
           const data = await getUser();
           if (data) setUserData(data);
@@ -54,19 +63,19 @@ const AppLayout =
           const allChats = await getAllUserChats();
           if (allChats) setChatList(allChats);
 
-          setLoading(false);
+          dispatch(setLoading(false));
         };
         fetchCurrentUserAndAllChats();
 
         const fetchChatdetails = async () => {
-          setLoading(true);
-          const result = await getChatDetails(chatId);
+          dispatch(setLoading(true));
+          const result = await getChatDetails(chatId, navigate);
           // console.log("Chat Details", result.members);
           setMembers(result.members);
-          setLoading(false);
+          dispatch(setLoading(false));
         };
         if (chatId) fetchChatdetails();
-      }, []);
+      }, [perticularChatId]);
 
       if (loading) {
         return (
@@ -110,6 +119,7 @@ const AppLayout =
                       chats={chatList}
                       chatId={chatId}
                       handleDeleteChat={handleDeleteChat}
+                      setPerticularChatI={setPerticularChatI}
                     />
                   )}
                 </Grid>

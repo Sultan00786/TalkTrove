@@ -14,6 +14,7 @@ function ChatList({
     },
   ],
   handleDeleteChat,
+  setPerticularChatI,
 }) {
   return (
     <div className="flex flex-col items-center overflow-y-scroll h-full w-full">
@@ -36,6 +37,7 @@ function ChatList({
             groupChat={isGroupChat}
             isChatOpen={chatId === _id}
             handleDeleteChat={handleDeleteChat}
+            setPerticularChatI={setPerticularChatI}
           />
         );
       })}

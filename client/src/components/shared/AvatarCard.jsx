@@ -15,7 +15,7 @@ function AvatarCard({ avatar }) {
                 key={index}
                 src={data}
                 alt="avatar"
-                className="w-fit h-fit rounded-full"
+                className="w-fit h-fit rounded-full aspect-square object-cover"
               />
             </div>
           );
