@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import React, { Suspense, useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   getAllUserChats,
@@ -16,6 +16,7 @@ import Header from "./Header";
 import Loader from "./Loader";
 import { io } from "socket.io-client";
 import { setSocket } from "../../operation/reducer/socketSlice";
+import { setLoading } from "../../operation/reducer/userSlice";
 
 const AppLayout =
   () =>
@@ -31,7 +32,8 @@ const AppLayout =
 
       const [members, setMembers] = useState([]);
 
-      const [loading, setLoading] = useState(false);
+      // const [loading, setLoading] = useState(false);
+      const { loading } = useSelector((state) => state.user);
 
       const chatId = params.chatId;
 
@@ -53,7 +55,7 @@ const AppLayout =
 
       useEffect(() => {
         const fetchCurrentUserAndAllChats = async () => {
-          setLoading(true);
+          dispatch(setLoading(true));
 
           const data = await getUser();
           if (data) setUserData(data);
@@ -61,16 +63,16 @@ const AppLayout =
           const allChats = await getAllUserChats();
           if (allChats) setChatList(allChats);
 
-          setLoading(false);
+          dispatch(setLoading(false));
         };
         fetchCurrentUserAndAllChats();
 
         const fetchChatdetails = async () => {
-          setLoading(true);
+          dispatch(setLoading(true));
           const result = await getChatDetails(chatId, navigate);
           // console.log("Chat Details", result.members);
           setMembers(result.members);
-          setLoading(false);
+          dispatch(setLoading(false));
         };
         if (chatId) fetchChatdetails();
       }, [perticularChatId]);
