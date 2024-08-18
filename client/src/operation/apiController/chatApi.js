@@ -33,7 +33,7 @@ export const getOldMessages = async (chatId, page) => {
   try {
     const response = await apiConnector(
       "GET",
-      GET_MESSAGES + `/${chatId}`,
+      GET_MESSAGES + `/${chatId}?page=${page}`,
       null,
       { page: page }
     );
