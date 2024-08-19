@@ -28,13 +28,13 @@ function ChatItem({
   useEffect(() => {
     const timer = setTimeout(() => {
       setShow(true);
-    }, index * 80); // Delay of 1000ms (1 second) before the transition starts
+    }, index * 80); // Delay before the transition starts
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <Grow style={{ width: `100%` }} in={show} direction="right" timeout={250}>
+    <Grow style={{ width: `100%` }} in={show} timeout={250}>
       <Link
         className="w-full"
         to={`/chat/${_id}`}

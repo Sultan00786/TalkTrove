@@ -82,7 +82,7 @@ function Chat({ chatId, members }) {
             {message?.attachment?.length !== 0 ? (
               <MessageAttachement />
             ) : (
-              <MessageBox userId={userId} message={message} key={index} />
+              <MessageBox userId={userId} message={message} key={index} index={index} />
             )}
           </>
         ))}
