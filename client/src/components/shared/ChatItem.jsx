@@ -1,4 +1,4 @@
-import { Slide } from "@mui/material";
+import { Grow, Slide } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AvatarCard from "./AvatarCard";
@@ -34,7 +34,7 @@ function ChatItem({
   }, []);
 
   return (
-    <Slide style={{ width: `100%` }} in={show} direction="right" timeout={230}>
+    <Grow style={{ width: `100%` }} in={show} direction="right" timeout={250}>
       <Link
         className="w-full"
         to={`/chat/${_id}`}
@@ -64,7 +64,7 @@ function ChatItem({
           )}
         </div>
       </Link>
-    </Slide>
+    </Grow>
   );
 }
 
