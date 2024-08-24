@@ -53,6 +53,11 @@ function Chat({ chatId, members }) {
       if (result.totalPages) {
         setTotalPages(result.totalPages);
       }
+      console.log(page < totalPages);
+      if (page <= totalPages) {
+        const scrollElement = scrollRef.current;
+        scrollElement.scrollTop = 999;
+      }
     };
     fetchOldMessages();
   }, [page]);
@@ -60,10 +65,10 @@ function Chat({ chatId, members }) {
   useEffect(() => {
     // Implement infinite scroll logic here
     const scrollElement = scrollRef.current;
-
     scrollElement.addEventListener("scroll", () => {
+      console.log(scrollElement.scrollTop);
       if (scrollElement && page < totalPages && scrollElement.scrollTop === 0) {
-        setPage((prev) => prev + 1);
+        setPage(page + 1);
       }
     });
 
@@ -82,7 +87,12 @@ function Chat({ chatId, members }) {
             {message?.attachment?.length !== 0 ? (
               <MessageAttachement />
             ) : (
-              <MessageBox userId={userId} message={message} key={index} index={index} />
+              <MessageBox
+                userId={userId}
+                message={message}
+                key={index}
+                index={index}
+              />
             )}
           </>
         ))}
