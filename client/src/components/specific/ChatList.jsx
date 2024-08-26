@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ChatItem from "../shared/ChatItem";
+import { useSelector } from "react-redux";
+import { USER_ONLINE_STATUS } from "../../constant/events";
 
 function ChatList({
   w = "100",
   chats = [],
   chatId,
-  onlineUsers = [],
   newMessagesAlert = [
     {
       chatId: "",
@@ -15,6 +16,17 @@ function ChatList({
   handleDeleteChat,
   setPerticularChatI,
 }) {
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
+  const { socket } = useSelector((state) => state.socket);
+
+  useEffect(() => {
+    socket.on(USER_ONLINE_STATUS, (users) => {
+      setOnlineUsers(users);
+      console.log(users);
+    });
+  }, [socket]);
+
   return (
     <div className="flex flex-col overflow-y-scroll h-full w-full">
       {chats.map((data, index) => {
