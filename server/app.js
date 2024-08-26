@@ -14,7 +14,7 @@ import {
 import { adminRouter } from "./routes/admin.js";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
+import { NEW_MESSAGE, NEW_MESSAGE_ALERT, USER_ONLINE_STATUS } from "./constants/events.js";
 import { v4 as uuid } from "uuid";
 import { Message } from "./models/message.js";
 import { getSockets } from "./lib/helper.js";
@@ -38,7 +38,8 @@ const io = new Server(server, {
     credentials: true,
   },
 });
-const userSocketIds = new Map();
+let userSocketIds = new Map();
+let onlineUsers = [];
 const corsOptions = {
   origin: process.env.CLIENT_URL,
   credentials: true,
@@ -71,6 +72,7 @@ io.use((socket, next) => {
 io.on("connection", (socket) => {
   const user = socket.user;
   userSocketIds.set(user._id.toString(), socket.id);
+  onlineUsers = Array.from(userSocketIds.keys());
 
   socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
     const messageForRealTime = {
@@ -112,8 +114,11 @@ io.on("connection", (socket) => {
     io.to(onlineMembersSockets).emit(NEW_MESSAGE_ALERT, { chatId });
   });
 
+  socket.emit(USER_ONLINE_STATUS, onlineUsers );
+
   socket.on("disconnect", () => {
     userSocketIds.delete(user._id.toString());
+    onlineUsers.filter((id) => id !== user._id.toString());
   });
 });
 

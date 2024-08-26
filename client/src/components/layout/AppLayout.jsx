@@ -102,6 +102,7 @@ const AppLayout =
                 container
                 height={isGroupEdit ? "100vh" : "calc(100vh - 4rem)"}
               >
+                {/* Chat list or group chat list  */}
                 <Grid
                   item
                   sm={4}
@@ -124,6 +125,7 @@ const AppLayout =
                   )}
                 </Grid>
 
+                {/* wrapped commponent  */}
                 <Grid
                   item
                   xs={12}
@@ -139,6 +141,7 @@ const AppLayout =
                   />
                 </Grid>
 
+                {/* if isGroupEdit is false the show Profile */}
                 {!isGroupEdit && (
                   <Grid
                     item

@@ -28,6 +28,7 @@ function Chat({ chatId, members }) {
   const { socket } = useSelector((state) => state.socket);
 
   const scrollRef = useRef();
+  const scrollElement = scrollRef.current;
 
   const handleSendMessage = (e) => {
     if (!message.trim()) return;
@@ -53,21 +54,27 @@ function Chat({ chatId, members }) {
       if (result.totalPages) {
         setTotalPages(result.totalPages);
       }
+      console.log(page < totalPages);
+      if (page <= totalPages) {
+        scrollElement.scrollTop = 999;
+      }
     };
     fetchOldMessages();
   }, [page]);
 
   useEffect(() => {
     // Implement infinite scroll logic here
-    const scrollElement = scrollRef.current;
+    if (scrollElement) {
+      // if statement is used because undifine's error is occure
+      scrollElement.addEventListener("scroll", () => {
+        console.log(scrollElement.scrollTop);
+        if (page < totalPages && scrollElement.scrollTop === 0) {
+          setPage(page + 1);
+        }
+      });
 
-    scrollElement.addEventListener("scroll", () => {
-      if (scrollElement && page < totalPages && scrollElement.scrollTop === 0) {
-        setPage((prev) => prev + 1);
-      }
-    });
-
-    return () => scrollElement.removeEventListener("scroll", () => {});
+      return () => scrollElement.removeEventListener("scroll", () => {});
+    }
   }, [totalPages]);
 
   return (
@@ -82,7 +89,12 @@ function Chat({ chatId, members }) {
             {message?.attachment?.length !== 0 ? (
               <MessageAttachement />
             ) : (
-              <MessageBox userId={userId} message={message} key={index} />
+              <MessageBox
+                userId={userId}
+                message={message}
+                key={index}
+                index={index}
+              />
             )}
           </>
         ))}
