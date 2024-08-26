@@ -1,6 +1,6 @@
 import React from "react";
 
-function AvatarCard({ avatar }) {
+function AvatarCard({ avatar, isOnline }) {
   return (
     <div>
       <div className={`relative w-16 h-12`}>
@@ -17,6 +17,11 @@ function AvatarCard({ avatar }) {
                 alt="avatar"
                 className="w-fit h-fit rounded-full aspect-square object-cover"
               />
+              {index === avatar.length - 1 && isOnline && (
+                <div className=" relative z-40 flex items-center ">
+                  <div className=" absolute -top-[2.8rem] right-0 w-[0.6rem] h-[0.6rem] rounded-full bg-green-600 border-[2px] border-green-700"></div>
+                </div>
+              )}
             </div>
           );
         })}
