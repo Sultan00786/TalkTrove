@@ -28,6 +28,7 @@ function Chat({ chatId, members }) {
   const { socket } = useSelector((state) => state.socket);
 
   const scrollRef = useRef();
+  const scrollElement = scrollRef.current;
 
   const handleSendMessage = (e) => {
     if (!message.trim()) return;
@@ -55,7 +56,6 @@ function Chat({ chatId, members }) {
       }
       console.log(page < totalPages);
       if (page <= totalPages) {
-        const scrollElement = scrollRef.current;
         scrollElement.scrollTop = 999;
       }
     };
@@ -64,15 +64,17 @@ function Chat({ chatId, members }) {
 
   useEffect(() => {
     // Implement infinite scroll logic here
-    const scrollElement = scrollRef.current;
-    scrollElement.addEventListener("scroll", () => {
-      console.log(scrollElement.scrollTop);
-      if (scrollElement && page < totalPages && scrollElement.scrollTop === 0) {
-        setPage(page + 1);
-      }
-    });
+    if (scrollElement) {
+      // if statement is used because undifine's error is occure
+      scrollElement.addEventListener("scroll", () => {
+        console.log(scrollElement.scrollTop);
+        if (page < totalPages && scrollElement.scrollTop === 0) {
+          setPage(page + 1);
+        }
+      });
 
-    return () => scrollElement.removeEventListener("scroll", () => {});
+      return () => scrollElement.removeEventListener("scroll", () => {});
+    }
   }, [totalPages]);
 
   return (
