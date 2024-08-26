@@ -14,7 +14,7 @@ function MessageBox({ message, userId, index = 0 }) {
   });
 
   return (
-    <Slide in={show} direction={"right"} timeout={200}>
+    <Slide in={show} direction={"right"} timeout={100}>
       <div
         className={` flex items-start gap-4  px-3 py-2 rounded-lg ${
           isEqualUser
