@@ -5,22 +5,26 @@ import { errorMiddleware } from "./middlewares/error.js";
 import chatRouter from "./routes/chat.js";
 import userRouter from "./routes/user.js";
 import { connectDB } from "./utils/feature.js";
-import {
-  createSampleChat,
-  createSampleGroupChat,
-  createSampleGroupMessage,
-  createSampleMessage,
-} from "./seeders/chat.js";
 import { adminRouter } from "./routes/admin.js";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import { NEW_MESSAGE, NEW_MESSAGE_ALERT, USER_ONLINE_STATUS } from "./constants/events.js";
 import { v4 as uuid } from "uuid";
 import { Message } from "./models/message.js";
 import { getSockets } from "./lib/helper.js";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
 import { socketAuthenticator } from "./middlewares/isAuthenticat.js";
+import {
+  createSampleChat,
+  createSampleGroupChat,
+  createSampleGroupMessage,
+  createSampleMessage,
+} from "./seeders/chat.js";
+import {
+  NEW_MESSAGE,
+  NEW_MESSAGE_ALERT,
+  USER_ONLINE_STATUS,
+} from "./constants/events.js";
 
 dotenv.config({
   path: "./.env",
@@ -114,7 +118,7 @@ io.on("connection", (socket) => {
     io.to(onlineMembersSockets).emit(NEW_MESSAGE_ALERT, { chatId });
   });
 
-  socket.emit(USER_ONLINE_STATUS, onlineUsers );
+  socket.emit(USER_ONLINE_STATUS, onlineUsers);
 
   socket.on("disconnect", () => {
     userSocketIds.delete(user._id.toString());

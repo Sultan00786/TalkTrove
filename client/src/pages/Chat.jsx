@@ -48,9 +48,13 @@ function Chat({ chatId, members }) {
   useEffect(() => {
     const fetchOldMessages = async () => {
       const result = await getOldMessages(chatId, page);
-
-      if (result.messages)
-        setOldMessages((prev) => [...result.messages, ...prev]);
+      if (result.messages) {
+        console.log(result.messages);
+        let newArr = [...oldMessages, ...result.messages];
+        console.log(newArr);
+        setOldMessages(newArr);
+        console.log(oldMessages);
+      }
       if (result.totalPages) {
         setTotalPages(result.totalPages);
       }
@@ -67,7 +71,6 @@ function Chat({ chatId, members }) {
     if (scrollElement) {
       // if statement is used because undifine's error is occure
       scrollElement.addEventListener("scroll", () => {
-        console.log(scrollElement.scrollTop);
         if (page < totalPages && scrollElement.scrollTop === 0) {
           setPage(page + 1);
         }
