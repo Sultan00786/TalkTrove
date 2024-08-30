@@ -7,7 +7,7 @@ import { sampleMessage } from "../components/constant/sampleData";
 import AppLayout from "../components/layout/AppLayout";
 import MessageAttachement from "../components/message/MessageAttachement";
 import MessageBox from "../components/message/MessageBox";
-import { NEW_MESSAGE } from "../constant/events";
+import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "../constant/events";
 import { useSocketEvents } from "../hooks/hooks";
 import { getOldMessages } from "../operation/apiController/chatApi";
 import { setLoading } from "../operation/reducer/userSlice";
@@ -30,6 +30,7 @@ function Chat({ chatId, members }) {
   const scrollRef = useRef();
   const scrollElement = scrollRef.current;
 
+  // when message is send then handleSendMessage func is get called
   const handleSendMessage = (e) => {
     if (!message.trim()) return;
     // Emmiting the message to the server
@@ -38,22 +39,20 @@ function Chat({ chatId, members }) {
     e.preventDefault();
   };
 
+  // when new messages comes from websocket then use handlerNewMessage func for setting messages
   const handlerNewMessage = useCallback((data) => {
     setMessages((prev) => [...prev, data.data]);
   }, []);
-
   const eventArr = { [NEW_MESSAGE]: handlerNewMessage }; // object is created with [dynamic key value]
+  // this useEffect use when NEW_MESSAGE event is emit
   useSocketEvents(socket, eventArr);
 
   useEffect(() => {
     const fetchOldMessages = async () => {
       const result = await getOldMessages(chatId, page);
       if (result.messages) {
-        console.log(result.messages);
-        let newArr = [...oldMessages, ...result.messages];
-        console.log(newArr);
+        let newArr = [...result.messages, ...oldMessages];
         setOldMessages(newArr);
-        console.log(oldMessages);
       }
       if (result.totalPages) {
         setTotalPages(result.totalPages);
@@ -84,7 +83,7 @@ function Chat({ chatId, members }) {
     <div className=" w-full h-full max-h-[95vh]">
       <div
         ref={scrollRef}
-        className=" bg-gray-300 h-[88%] px-5 py-3 rounded-sm overflow-y-auto overflow-x-hidden flex flex-col gap-5 shadow-sm shadow-gray-300 border-2 border-gray-400 border-t-0"
+        className="bg-gray-300 h-[88%] px-5 py-3 rounded-sm overflow-y-auto overflow-x-hidden flex flex-col gap-5 shadow-sm shadow-gray-300 border-2 border-gray-400 border-t-0"
       >
         {/* map for old messages  */}
         {oldMessages.map((message, index) => (

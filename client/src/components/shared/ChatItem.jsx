@@ -1,7 +1,10 @@
 import { Grow, Slide } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import AvatarCard from "./AvatarCard";
+import { NEW_MESSAGE_ALERT } from "../../constant/events";
+import { useSocketEvents } from "../../hooks/hooks";
+import { useSelector } from "react-redux";
 
 function ChatItem({
   avatar,
@@ -10,14 +13,16 @@ function ChatItem({
   groupChat = false,
   isChatOpen,
   isOnline,
-  newMessageAlert,
   index = 0,
   handleDeleteChat,
   setPerticularChatI,
 }) {
   const navigate = useNavigate();
-
+  const { socket } = useSelector((state) => state.socket);
   const [show, setShow] = useState(false);
+
+  const { chatId } = useParams();
+  const [newMessageAlert, setNewMessageAlert] = useState(0);
 
   const handlerClickOnFriendChat = () => {
     console.log("clicked");
@@ -32,6 +37,18 @@ function ChatItem({
 
     return () => clearTimeout(timer);
   }, []);
+
+  const handlerNewMessageAlert = useCallback((data) => {
+    if (_id === data.chatId) {
+      // console.log("new message alert", data);
+      // console.log("params", chatId);
+      if (_id !== chatId) {
+        setNewMessageAlert(newMessageAlert + 1);
+      } else setNewMessageAlert(0);
+    }
+  });
+  const eventArrNewMsgAlert = { [NEW_MESSAGE_ALERT]: handlerNewMessageAlert };
+  useSocketEvents(socket, eventArrNewMsgAlert);
 
   return (
     <Grow style={{ width: `100%` }} in={show} timeout={250}>
@@ -53,9 +70,9 @@ function ChatItem({
             <div className=" w-[94%] font-extrabold text-lg pl-2">
               {name.length > 17 ? `${name.slice(0, 17)}...` : name}
             </div>
-            {newMessageAlert && (
-              <div className=" w-5 h-5 absolute z-50 right-4 text-white font-semibol flex items-center justify-center bg-emerald-600 border-[3px] border-green-700 rounded-full ">
-                {newMessageAlert?.count}
+            {newMessageAlert !== 0 && (
+              <div className=" w-5 h-5 absolute z-50 right-4 text-white font-semibol flex items-center justify-center bg-emerald-600 rounded-full shadow-sm shadow-black ">
+                {newMessageAlert}
               </div>
             )}
           </div>

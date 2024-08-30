@@ -23,7 +23,6 @@ function ChatList({
   useEffect(() => {
     socket.on(USER_ONLINE_STATUS, (users) => {
       setOnlineUsers(users);
-      console.log(users);
     });
   }, [socket]);
 
