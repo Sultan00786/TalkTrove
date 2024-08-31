@@ -125,10 +125,7 @@ io.on("connection", (socket) => {
   socket.emit(USER_ONLINE_STATUS, onlineUsers);
 
   socket.on(NEW_REQUEST, (userId) => {
-    console.log(userId);
     const socketIdOfReciver = [userSocketIds.get(userId)];
-    console.log(userSocketIds);
-    console.log("data:", socketIdOfReciver);
     socket.to(socketIdOfReciver).emit(NEW_REQUEST, { isMsgRecieve: true });
   });
 
