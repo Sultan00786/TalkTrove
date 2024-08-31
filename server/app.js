@@ -23,6 +23,7 @@ import {
 import {
   NEW_MESSAGE,
   NEW_MESSAGE_ALERT,
+  NEW_REQUEST,
   USER_ONLINE_STATUS,
 } from "./constants/events.js";
 
@@ -78,6 +79,7 @@ io.on("connection", (socket) => {
   userSocketIds.set(user._id.toString(), socket.id);
   onlineUsers = Array.from(userSocketIds.keys());
 
+  // This event is get triggered when NEW_MESSAGE event get emit here becase of socket id's
   socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
     const messageForRealTime = {
       content: message,
@@ -112,13 +114,23 @@ io.on("connection", (socket) => {
     }
 
     const onlineMembersSockets = getSockets(members);
+    console.log("data", onlineMembersSockets);
     io.to(onlineMembersSockets).emit(NEW_MESSAGE, {
       data: result,
     });
     io.to(onlineMembersSockets).emit(NEW_MESSAGE_ALERT, { chatId });
   });
 
+  // USER_ONLINE_STATUS event emit from here
   socket.emit(USER_ONLINE_STATUS, onlineUsers);
+
+  socket.on(NEW_REQUEST, (userId) => {
+    console.log(userId);
+    const socketIdOfReciver = [userSocketIds.get(userId)];
+    console.log(userSocketIds);
+    console.log("data:", socketIdOfReciver);
+    socket.to(socketIdOfReciver).emit(NEW_REQUEST, { isMsgRecieve: true });
+  });
 
   socket.on("disconnect", () => {
     userSocketIds.delete(user._id.toString());
