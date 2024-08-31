@@ -6,7 +6,6 @@ import { acceptFriendRequest } from "../../operation/apiController/userApi";
 import { useNavigate } from "react-router-dom";
 
 function NotificationDialog({ handleNotification, open, notificatnReq }) {
-  console.log(notificatnReq);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
