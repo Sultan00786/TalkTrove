@@ -8,6 +8,9 @@ const initialState = {
     ? JSON.parse(localStorage.getItem("token"))
     : null,
   loading: false,
+  NOTIFICATION: localStorage.getItem("NOTIFICATION")
+    ? true
+    : false,
 };
 
 const userSlice = createSlice({
@@ -23,8 +26,12 @@ const userSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setNOTIFICATION: (state, action) => {
+      state.NOTIFICATION = action.payload;
+    },
   },
 });
 
-export const { setUser, setLoading, setToken } = userSlice.actions;
+export const { setUser, setLoading, setToken, setNOTIFICATION } =
+  userSlice.actions;
 export default userSlice.reducer;
