@@ -102,15 +102,18 @@ function Chat({ chatId, members }) {
         ))}
 
         {/* map for real time messages */}
-        {messages.map((message, index) => (
-          <>
-            {message?.attachment?.length !== 0 ? (
-              <MessageAttachement />
-            ) : (
-              <MessageBox userId={userId} message={message} key={index} />
-            )}
-          </>
-        ))}
+        {messages.map(
+          (message, index) =>
+            chatId === message.chat && (
+              <>
+                {message?.attachment?.length !== 0 ? (
+                  <MessageAttachement />
+                ) : (
+                  <MessageBox userId={userId} message={message} key={index} />
+                )}
+              </>
+            )
+        )}
       </div>
       <form
         onSubmit={handleSendMessage}
