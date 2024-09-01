@@ -8,9 +8,10 @@ const initialState = {
     ? JSON.parse(localStorage.getItem("token"))
     : null,
   loading: false,
-  NOTIFICATION: localStorage.getItem("NOTIFICATION")
-    ? true
-    : false,
+  newMessageArr: localStorage.getItem("newMessageArr")
+    ? JSON.parse(localStorage.getItem("newMessageArr"))
+    : [],
+  NOTIFICATION: localStorage.getItem("NOTIFICATION") ? true : false,
 };
 
 const userSlice = createSlice({
@@ -26,12 +27,20 @@ const userSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setNewMessageArr: (state, action) => {
+      state.newMessageArr = action.payload;
+    },
     setNOTIFICATION: (state, action) => {
       state.NOTIFICATION = action.payload;
     },
   },
 });
 
-export const { setUser, setLoading, setToken, setNOTIFICATION } =
-  userSlice.actions;
+export const {
+  setUser,
+  setLoading,
+  setToken,
+  setNOTIFICATION,
+  setNewMessageArr,
+} = userSlice.actions;
 export default userSlice.reducer;
