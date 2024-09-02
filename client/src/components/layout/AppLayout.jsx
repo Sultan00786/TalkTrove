@@ -74,7 +74,7 @@ const AppLayout =
           setMembers(result.members);
           dispatch(setLoading(false));
         };
-        if (chatId) fetchChatdetails();
+        if (chatId && !isGroupEdit) fetchChatdetails();
       }, [perticularChatId]);
 
       if (loading) {
