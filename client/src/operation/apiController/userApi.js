@@ -3,6 +3,7 @@ import { apiConnector } from "../apiConnect";
 import { userApiUrl } from "../apiUrl";
 import toast from "react-hot-toast";
 import { setToken, setUser } from "../reducer/userSlice";
+import { NEW_REQUEST } from "../../constant/events";
 
 const {
   NEW_USER_SIGN_UP,
@@ -91,11 +92,14 @@ export const userSearching = async (searchValue) => {
   }
 };
 
-export const sendFriendRequest = async (data) => {
+export const sendFriendRequest = async (data, socket) => {
   try {
     const response = await apiConnector("PUT", SEND_FRIEND_REQUEST, data);
-    if (response.status === 200) toast.success("Friend Request Sent");
-    console.log(response.status);
+    if (response.status === 200) {
+      toast.success("Friend Request Sent");
+      console.log(data.userId);
+      socket.emit(NEW_REQUEST, data.userId);
+    }
   } catch (error) {
     console.error(error);
     toast.error(error.response.data.message);
@@ -116,8 +120,7 @@ export const acceptFriendRequest = async (data, navigate) => {
     const response = await apiConnector("PUT", ACCEPT_FRINEDD_REQUEST, data);
     if (response.status === 200 && data.accept)
       toast.success("Friend Request Accepted");
-    if (!data.accept)
-      toast.success("Friend Request Rejected");
+    if (!data.accept) toast.success("Friend Request Rejected");
     console.log(response);
     navigate("/");
   } catch (error) {

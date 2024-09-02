@@ -12,11 +12,13 @@ import {
   sendFriendRequest,
   userSearching,
 } from "../../operation/apiController/userApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function SearchDialog({ open, handleSearch }) {
   const [newUsers, setNewUsers] = useState([]);
   const dispatch = useDispatch();
+
+  const { socket } = useSelector((state) => state.socket);
 
   const handler = (e) => {
     e.preventDefault();
@@ -35,7 +37,7 @@ function SearchDialog({ open, handleSearch }) {
 
   const handleRequest = (senderToId) => {
     console.log(senderToId);
-    dispatch(sendFriendRequest({ userId: senderToId }));
+    dispatch(sendFriendRequest({ userId: senderToId }, socket));
   };
 
   return (

@@ -5,22 +5,27 @@ import { errorMiddleware } from "./middlewares/error.js";
 import chatRouter from "./routes/chat.js";
 import userRouter from "./routes/user.js";
 import { connectDB } from "./utils/feature.js";
-import {
-  createSampleChat,
-  createSampleGroupChat,
-  createSampleGroupMessage,
-  createSampleMessage,
-} from "./seeders/chat.js";
 import { adminRouter } from "./routes/admin.js";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import { NEW_MESSAGE, NEW_MESSAGE_ALERT, USER_ONLINE_STATUS } from "./constants/events.js";
 import { v4 as uuid } from "uuid";
 import { Message } from "./models/message.js";
 import { getSockets } from "./lib/helper.js";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
 import { socketAuthenticator } from "./middlewares/isAuthenticat.js";
+import {
+  createSampleChat,
+  createSampleGroupChat,
+  createSampleGroupMessage,
+  createSampleMessage,
+} from "./seeders/chat.js";
+import {
+  NEW_MESSAGE,
+  NEW_MESSAGE_ALERT,
+  NEW_REQUEST,
+  USER_ONLINE_STATUS,
+} from "./constants/events.js";
 
 dotenv.config({
   path: "./.env",
@@ -74,6 +79,7 @@ io.on("connection", (socket) => {
   userSocketIds.set(user._id.toString(), socket.id);
   onlineUsers = Array.from(userSocketIds.keys());
 
+  // This event is get triggered when NEW_MESSAGE event get emit here becase of socket id's
   socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
     const messageForRealTime = {
       content: message,
@@ -108,13 +114,20 @@ io.on("connection", (socket) => {
     }
 
     const onlineMembersSockets = getSockets(members);
+    console.log("data", onlineMembersSockets);
     io.to(onlineMembersSockets).emit(NEW_MESSAGE, {
       data: result,
     });
     io.to(onlineMembersSockets).emit(NEW_MESSAGE_ALERT, { chatId });
   });
 
-  socket.emit(USER_ONLINE_STATUS, onlineUsers );
+  // USER_ONLINE_STATUS event emit from here
+  socket.emit(USER_ONLINE_STATUS, onlineUsers);
+
+  socket.on(NEW_REQUEST, (userId) => {
+    const socketIdOfReciver = [userSocketIds.get(userId)];
+    socket.to(socketIdOfReciver).emit(NEW_REQUEST, { isMsgRecieve: true });
+  });
 
   socket.on("disconnect", () => {
     userSocketIds.delete(user._id.toString());

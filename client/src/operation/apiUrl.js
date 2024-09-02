@@ -17,4 +17,5 @@ export const chatApiUrl = {
   GET_ALL_CHAT: `${BASE}/chat/getMyChats`,
   GET_CHAT_DETAILS: `${BASE}/chat`,
   GET_MESSAGES: `${BASE}/chat/messages`,
+  GET_GROUP_CHAT_LIST: `${BASE}/chat/getMyChats/group`,
 };

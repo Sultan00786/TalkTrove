@@ -22,13 +22,18 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setLoading,
+  setNOTIFICATION,
   setToken,
   setUser,
 } from "../../operation/reducer/userSlice";
 import { apiConnector } from "../../operation/apiConnect";
 import { userApiUrl } from "../../operation/apiUrl";
-import { getAllNotification, userLogout } from "../../operation/apiController/userApi";
+import {
+  getAllNotification,
+  userLogout,
+} from "../../operation/apiController/userApi";
 import Loader from "./Loader";
+import { NEW_MESSAGE, NEW_REQUEST } from "../../constant/events";
 
 const SearchDialog = lazy(() => import("../specific/SearchDialog"));
 const NewGroupDialog = lazy(() => import("../dialog/NewGroupDialog"));
@@ -37,7 +42,10 @@ const NotificationDialog = lazy(() => import("../specific/NotificationDialog"));
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.user);
+
+  const { token, NOTIFICATION } = useSelector((state) => state.user);
+  const { socket } = useSelector((state) => state.socket);
+
   const [isSearch, setIsSearch] = useState(false);
   const [isNewGroup, setIsNewGroup] = useState(false);
   const [isNofication, setIsNofication] = useState(false);
@@ -45,7 +53,7 @@ const Header = () => {
 
   useEffect(() => {
     const fetchAllNotification = async () => {
-      const result = await getAllNotification()
+      const result = await getAllNotification();
       setNotificatnReq(result);
     };
     fetchAllNotification();
@@ -64,14 +72,25 @@ const Header = () => {
   }
 
   async function handleLogOut() {
-    console.log("click on handleLogOut");
     dispatch(userLogout(token, dispatch, navigate));
   }
 
   function handleNotification() {
     setIsNofication((prev) => !prev);
-    console.log("click on handleNotification");
+    localStorage.removeItem("NOTIFICATION");
+    console.log(localStorage.getItem("NOTIFICATION"));
+    dispatch(setNOTIFICATION(false));
   }
+
+  // useEffect of NEW_REQUEST event handling
+  useEffect(() => {
+    socket.on(NEW_REQUEST, (data) => {
+      console.log("NEW_REQUEST");
+      console.log(data);
+      localStorage.setItem("NOTIFICATION", data.isMsgRecieve);
+      dispatch(setNOTIFICATION(data.isMsgRecieve));
+    });
+  }, [socket]);
 
   return (
     <div className=" z-100 shadow-xl ">
@@ -106,7 +125,7 @@ const Header = () => {
               </Box>
             </div>
 
-            <Box>
+            <Box className="flex">
               <IconBtn
                 title={"Search"}
                 icon={<Search />}
@@ -118,15 +137,20 @@ const Header = () => {
                 onClick={handleCreatGroup}
               />
               <IconBtn
-                title={"Mange Group"}
+                title={"Manage Group"}
                 icon={<Group />}
                 onClick={() => navigate("/groups")}
               />
-              <IconBtn
-                title={"Mange Group"}
-                icon={<Notifications />}
-                onClick={handleNotification}
-              />
+              <div className=" relative w-fit">
+                <IconBtn
+                  title={"Notification"}
+                  icon={<Notifications />}
+                  onClick={handleNotification}
+                />
+                {NOTIFICATION && (
+                  <div className=" w-2 h-2 absolute bg-green-600 rounded-full top-[13px] right-[13px] "></div>
+                )}
+              </div>
               <IconBtn
                 title={"LogOut"}
                 icon={<Logout />}

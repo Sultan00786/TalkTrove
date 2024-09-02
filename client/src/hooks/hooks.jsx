@@ -10,13 +10,7 @@ const useSocketEvents = (socket, handlers) => {
 
     return () => {
         Object.entries(handlers).forEach(([eventName, hadler])=>{
-            socket.off(eventName, hadler
-              // (data) => {
-              //   console.log(data);
-              //   const newMessages = [...messages, data];
-              //   setMessages
-              // };
-            )
+            socket.off(eventName, hadler)
         })
     }
   }, [socket, handlers]);

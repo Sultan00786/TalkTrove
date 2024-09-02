@@ -23,12 +23,11 @@ function ChatList({
   useEffect(() => {
     socket.on(USER_ONLINE_STATUS, (users) => {
       setOnlineUsers(users);
-      console.log(users);
     });
   }, [socket]);
 
   return (
-    <div className="flex flex-col overflow-y-scroll h-full w-full">
+    <div className=" bg-gray-100 flex flex-col overflow-y-scroll h-full w-full">
       {chats.map((data, index) => {
         const { name, isGroupChat, avatar, members, _id } = data;
         const newMessageAlert = newMessagesAlert.find((i) => i.chatId === _id);
