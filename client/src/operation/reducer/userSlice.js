@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { set } from "react-hook-form";
 
 const initialState = {
   user: localStorage.getItem("user")
@@ -8,6 +9,7 @@ const initialState = {
     ? JSON.parse(localStorage.getItem("token"))
     : null,
   loading: false,
+  toggle: false,
   newMessageArr: localStorage.getItem("newMessageArr")
     ? JSON.parse(localStorage.getItem("newMessageArr"))
     : [],
@@ -27,6 +29,9 @@ const userSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setToggle: (state, action) => {
+      state.toggle = action.payload;
+    },
     setNewMessageArr: (state, action) => {
       state.newMessageArr = action.payload;
     },
@@ -39,6 +44,7 @@ const userSlice = createSlice({
 export const {
   setUser,
   setLoading,
+  setToggle,
   setToken,
   setNOTIFICATION,
   setNewMessageArr,
