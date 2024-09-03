@@ -1,23 +1,42 @@
 import { Edit } from "@mui/icons-material";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Button, IconButton, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { sampleGroupMember } from "../constant/sampleData";
 import AppLayout from "../layout/AppLayout";
-import GroupMembersEdit from "./GroupMembersEdit";
 import AddMemberDialog from "./AddMemberDialog";
 import DeleteGroup from "./DeleteGroup";
+import GroupMembersEdit from "./GroupMembersEdit";
+import { getChatDetails } from "../../operation/apiController/chatApi";
+import { useSelector, useDispatch } from "react-redux";
+import { setLoading } from "../../operation/reducer/userSlice";
+import { set } from "react-hook-form";
+import RenameDialog from "./RenameDialog";
 
 const GroupEdit = () => {
-  const param = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const param = useParams();
   const chatId = param.chatId;
+
   const [isAddFriend, setIsAddFriend] = useState(false);
   const [isGroupDelete, setIsGroupDelete] = useState(false);
-  // to do --> fetch group members from api
-  const groupMembers = sampleGroupMember;
-  console.log(groupMembers);
+  const [isRename, setIsRename] = useState(false);
+  const [groupDetails, setGroupDetails] = useState(null);
+
+  const { toggle } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const fetchGroupDetails = async () => {
+      const data = await getChatDetails(chatId, navigate, true);
+      if (data) {
+        setGroupDetails(data);
+      }
+    };
+    fetchGroupDetails();
+  }, [toggle]);
+
   return (
     <div className=" bg-gray-100 h-full overflow-x-hidden overflow-y-auto px-3 pt-4">
       <div className=" mb-16">
@@ -28,8 +47,8 @@ const GroupEdit = () => {
         </div>
         {/* to do group name fetch from api */}
         <div className=" pt-10 text-center text-4xl text-gray-700">
-          Group Name?
-          <IconButton>
+          {groupDetails?.name}
+          <IconButton onClick={() => setIsRename(true)}>
             <Edit />
           </IconButton>
         </div>
@@ -37,8 +56,10 @@ const GroupEdit = () => {
       <div className=" px-24 mb-20">
         <Typography variant="h5">Members</Typography>
         <div className="flex flex-col gap-6 mt-5">
-          {groupMembers.map((user, index) => (
-            <GroupMembersEdit key={index} user={user} />
+          {groupDetails?.members?.map((user, index) => (
+            <div key={index}>
+              <GroupMembersEdit user={user} />
+            </div>
           ))}
         </div>
       </div>
@@ -51,6 +72,13 @@ const GroupEdit = () => {
           ADD MEMBER
         </Button>
       </div>
+      {isRename && (
+        <RenameDialog
+          setIsRename={setIsRename}
+          isRename={isRename}
+          chatId={chatId}
+        />
+      )}
       {isAddFriend && (
         <AddMemberDialog
           setIsAddFriend={setIsAddFriend}
