@@ -26,8 +26,8 @@ const AppLayout =
       const navigate = useNavigate();
       const params = useParams();
 
-      const [userData, setUserData] = useState(sampleUser);
-      const [chatList, setChatList] = useState(sampleChats);
+      const [userData, setUserData] = useState(null);
+      const [chatList, setChatList] = useState([]);
       const [perticularChatId, setPerticularChatI] = useState("");
 
       const [members, setMembers] = useState([]);
