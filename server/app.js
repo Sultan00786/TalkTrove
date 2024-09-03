@@ -114,7 +114,6 @@ io.on("connection", (socket) => {
     }
 
     const onlineMembersSockets = getSockets(members);
-    console.log("data", onlineMembersSockets);
     io.to(onlineMembersSockets).emit(NEW_MESSAGE, {
       data: result,
     });

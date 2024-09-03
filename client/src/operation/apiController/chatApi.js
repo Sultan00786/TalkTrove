@@ -2,8 +2,14 @@ import { toast } from "react-hot-toast";
 import { apiConnector } from "../apiConnect";
 import { chatApiUrl } from "../apiUrl";
 
-const { GET_ALL_CHAT, GET_CHAT_DETAILS, GET_MESSAGES, GET_GROUP_CHAT_LIST } =
-  chatApiUrl;
+const {
+  GET_ALL_CHAT,
+  GET_CHAT_DETAILS,
+  GET_MESSAGES,
+  GET_GROUP_CHAT_LIST,
+  REMOVE_GROUP_MEMBER,
+  RENAME_GROUP,
+} = chatApiUrl;
 
 export const getAllUserChats = async (data) => {
   try {
@@ -58,5 +64,37 @@ export const getGroupChat = async (navigate) => {
     console.error(error);
     navigate("/notFound");
     return [];
+  }
+};
+
+export const removeGrpMem = async (userId, chatId, navigate) => {
+  try {
+    const response = await apiConnector("PUT", REMOVE_GROUP_MEMBER, {
+      userId: userId,
+      chatId: chatId,
+    });
+    console.log(response);
+    if (response.data.message) toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data.message) toast.error(error.response.data.message);
+    else navigate("/notFound");
+    return null;
+  }
+};
+
+export const renameGroup = async (groupName, chatId, navigate) => {
+  try {
+    const response = await apiConnector("PUT", RENAME_GROUP + `/${chatId}`, {
+      name: groupName,
+    });
+    console.log(response.data);
+    if (response.data.message) toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data.message) toast.error(error.response.data.message);
+    return null;
   }
 };

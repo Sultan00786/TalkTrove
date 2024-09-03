@@ -31,34 +31,34 @@ const chatRouter = express.Router();
 // Afer user login to be accessible in all other routes
 chatRouter.use(isAuthenticat); // use as middleware
 
-chatRouter.post("/newGroup", newGroupValidator(), validatorHandler, newGroup); 
-chatRouter.get("/getMyChats", getMyChats); 
-chatRouter.get("/getMyChats/group", getMyGroups); 
+chatRouter.post("/newGroup", newGroupValidator(), validatorHandler, newGroup);
+chatRouter.get("/getMyChats", getMyChats);
+chatRouter.get("/getMyChats/group", getMyGroups);
 chatRouter.put(
   "/addMembers",
   addMembersValidator(),
   validatorHandler,
   addMembers
-); 
+);
 chatRouter.put(
   "/removeMember",
   removeMembersValidator(),
   validatorHandler,
   removeMember
-); 
+);
 chatRouter.delete(
   "/leaveGroup/:id",
   leaveGroupValidator(),
   validatorHandler,
   leaveGroup
-); 
+);
 chatRouter.post(
   "/sendAttachments",
   multipleAttachemnts,
   sendAttachmentsValidator(),
   validatorHandler,
   sendAttachments
-); 
+);
 
 // Get chat details, rename, delete
 chatRouter
