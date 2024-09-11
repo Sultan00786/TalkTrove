@@ -64,7 +64,7 @@ const AppLayout =
           if (allChats) {
             setChatList(allChats);
             dispatch(setUserFriend(allChats));
-            // console.log("All Chats", allChats);
+            console.log("All Chats", allChats);
           }
 
           dispatch(setLoading(false));

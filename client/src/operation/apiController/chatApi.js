@@ -7,6 +7,7 @@ const {
   GET_CHAT_DETAILS,
   GET_MESSAGES,
   GET_GROUP_CHAT_LIST,
+  CREAT_NEW_GROUP,
   ADD_GROUP_MEMEBERS,
   REMOVE_GROUP_MEMBER,
   RENAME_GROUP,
@@ -88,6 +89,18 @@ export const renameGroup = async (groupName, chatId, navigate) => {
     const response = await apiConnector("PUT", RENAME_GROUP + `/${chatId}`, {
       name: groupName,
     });
+    if (response.data.message) toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data.message) toast.error(error.response.data.message);
+    return null;
+  }
+};
+
+export const newGroupChat = async (data) => {
+  try {
+    const response = await apiConnector("POST", CREAT_NEW_GROUP, data);
     if (response.data.message) toast.success(response.data.message);
     return response.data;
   } catch (error) {
