@@ -83,6 +83,8 @@ const GroupEdit = () => {
         <AddMemberDialog
           setIsAddFriend={setIsAddFriend}
           isAddFriend={isAddFriend}
+          members={groupDetails?.members?.map((user) => user._id)}
+          chatId={chatId}
         />
       )}
       {isGroupDelete && (
