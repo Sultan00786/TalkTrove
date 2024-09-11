@@ -159,13 +159,13 @@ const removeMember = TryCatch(async (req, res, next) => {
   if (!chat.groupChat)
     return next(new ErrorHnadle("This is not a group chat", 400));
 
+  if (chat.creator.toString() === userId)
+    return next(new ErrorHnadle("Creator can't be remove the group", 403));
+
   if (chat.creator.toString() !== loginUser.toString())
     return next(
       new ErrorHnadle("Only creator of group can remove old members", 400)
     );
-
-  if (chat.creator.toString() === userId)
-    return next(new ErrorHnadle("Creator can't be remove the group", 403));
 
   if (chat.members.length <= 3)
     return next(new ErrorHnadle("Group must have at least 3 members", 400));
@@ -179,8 +179,6 @@ const removeMember = TryCatch(async (req, res, next) => {
     chat.members,
     `${userThatWillBeRemoved.name} removed from members of group chat`
   );
-
-  emitEvent(req, REFETCH_CHATS, chat.members);
 
   return res.status(200).json({
     success: true,

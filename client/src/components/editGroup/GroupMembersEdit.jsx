@@ -2,9 +2,24 @@ import { IconButton, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
 import AvatarCard from "../shared/AvatarCard";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { useDispatch, useSelector } from "react-redux";
+import { removeGrpMem } from "../../operation/apiController/chatApi";
+import { useParams, useNavigate } from "react-router-dom";
+import { setToggle } from "../../operation/reducer/userSlice";
 
 const GroupMembersEdit = (user) => {
-  console.log(user.user.avatar);
+  const dispatch = useDispatch();
+  const param = useParams();
+  const navigate = useNavigate();
+
+  const chatId = param.chatId;
+
+  const { toggle } = useSelector((state) => state.user);
+
+  const handlerRevomeMember = async () => {
+    const data = await removeGrpMem(user.user._id, chatId, navigate);
+    if (data) dispatch(setToggle(!toggle));
+  };
 
   return (
     <div className=" px-7">
@@ -15,6 +30,7 @@ const GroupMembersEdit = (user) => {
             <Typography variant="h6">{user.user.name}</Typography>
           </div>
           <IconButton
+            onClick={handlerRevomeMember}
             sx={{
               bgcolor: "red",
               ":hover": { bgcolor: "#c60b0b" },

@@ -9,14 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../operation/reducer/userSlice";
 
 const Profile = ({ user }) => {
-  const joinDate = new Date(user.createdAt);
+  const joinDate = new Date(user?.createdAt);
   const userJoin = calculateTimeSpam(joinDate);
 
   return (
     <div className="flex flex-col items-center gap-6 h-full pt-6">
       <div>
         <img
-          src={user.avatar[0]}
+          src={user?.avatar[0]}
           className=" w-[200px] h-[200px] object-cover rounded-full border-[4px] border-gray-100 "
         />
       </div>

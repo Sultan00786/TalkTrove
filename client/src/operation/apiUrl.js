@@ -18,4 +18,11 @@ export const chatApiUrl = {
   GET_CHAT_DETAILS: `${BASE}/chat`,
   GET_MESSAGES: `${BASE}/chat/messages`,
   GET_GROUP_CHAT_LIST: `${BASE}/chat/getMyChats/group`,
+
+  ADD_GROUP_MEMEBERS: `${BASE}/chat/addMembers`,
+  REMOVE_GROUP_MEMBER: `${BASE}/chat/removeMember`,
+  LEAVE_GROUP: `${BASE}/chat/leaveGroup`,
+  SEND_ATTACHMENT: `${BASE}/chat/sendAttachments`,
+  DELETE_GROUP: `${BASE}/chat`,
+  RENAME_GROUP: `${BASE}/chat`,
 };

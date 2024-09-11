@@ -1,6 +1,6 @@
 import React from "react";
 
-function AvatarCard({ avatar, isOnline }) {
+function AvatarCard({ avatar, isOnline = false }) {
   return (
     <div>
       <div className={`relative w-16 h-12`}>
