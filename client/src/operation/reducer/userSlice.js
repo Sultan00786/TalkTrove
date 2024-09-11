@@ -8,6 +8,7 @@ const initialState = {
   token: localStorage.getItem("token")
     ? JSON.parse(localStorage.getItem("token"))
     : null,
+  userFriends: [],
   loading: false,
   toggle: false,
   newMessageArr: localStorage.getItem("newMessageArr")
@@ -25,6 +26,9 @@ const userSlice = createSlice({
     },
     setToken: (state, action) => {
       state.token = action.payload;
+    },
+    setUserFriend: (state, action) => {
+      state.userFriends = action.payload;
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
@@ -46,6 +50,7 @@ export const {
   setLoading,
   setToggle,
   setToken,
+  setUserFriend,
   setNOTIFICATION,
   setNewMessageArr,
 } = userSlice.actions;
