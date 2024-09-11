@@ -16,7 +16,7 @@ import Header from "./Header";
 import Loader from "./Loader";
 import { io } from "socket.io-client";
 import { setSocket } from "../../operation/reducer/socketSlice";
-import { setLoading } from "../../operation/reducer/userSlice";
+import { setLoading, setUserFriend } from "../../operation/reducer/userSlice";
 
 const AppLayout =
   () =>
@@ -61,7 +61,11 @@ const AppLayout =
           if (data) setUserData(data);
 
           const allChats = await getAllUserChats();
-          if (allChats) setChatList(allChats);
+          if (allChats) {
+            setChatList(allChats);
+            dispatch(setUserFriend(allChats));
+            // console.log("All Chats", allChats);
+          }
 
           dispatch(setLoading(false));
         };
