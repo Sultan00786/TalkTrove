@@ -1,19 +1,28 @@
-import { Add, Remove, Search } from "@mui/icons-material";
+import { Add, Remove } from "@mui/icons-material";
 import {
   Button,
   Dialog,
   IconButton,
-  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { sampleChats } from "../constant/sampleData";
+import { useSelector } from "react-redux";
+import NameAvatar from "../specific/NameAvatar";
+import toast from "react-hot-toast";
+import { newGroupChat } from "../../operation/apiController/chatApi";
 
 function NewGroupDialog({ open, handlerToShowCreateGroup }) {
-  const users = sampleChats;
-  let [members, setMembers] = useState([]);
+  const [members, setMembers] = useState([]);
   const [name, setName] = useState("");
+  const [chats, setChats] = useState([]);
+
+  const { userFriends } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    setChats(userFriends.filter((chat) => !chat.groupChat));
+  });
 
   const handlerMemersAdd = (id) => {
     const updatedMembers = members.concat(id);
@@ -22,59 +31,66 @@ function NewGroupDialog({ open, handlerToShowCreateGroup }) {
 
   const handlerRemoveMembers = (id) => {
     console.log(id);
-    members = members.filter((member) => member !== id);
-    if (members) setMembers(members);
+    const newMembers = members.filter((member) => member !== id);
+    if (newMembers) setMembers(newMembers);
     else setMembers([]);
-    console.log(members);
+    console.log(newMembers);
   };
 
   const handlerCreateGroup = () => {
+    if (name === "") {
+      toast.error("Please Enter the Group name");
+      return;
+    } else if (members.length < 2) {
+      toast.error("Please select at least 2 members");
+      return;
+    }
     const data = {
       name,
       members,
     };
+    const result = newGroupChat(data);
     console.log(data);
     handlerToShowCreateGroup();
   };
 
   return (
     <div>
-      <Dialog open={open}>
+      <Dialog onClose={handlerToShowCreateGroup} open={open}>
         <div className=" lg:min-w-[500px] lg:min-h-96 flex flex-col gap-5 items-center p-4 pt-3 ">
           <Typography pt={4} variant="h4">
             New Group
           </Typography>
+
           <TextField
             label="GroupName"
             className=" px-6 bor lg:w-[300px] rounded-sm"
             variant="outlined"
             onChange={(e) => setName(e.target.value)}
           ></TextField>
-          <div className=" w-full px-16 pt-3 flex flex-col gap-4">
-            {users.map((user, index) => (
+
+          <div className=" w-full h-3/5 overflow-x-auto px-16 pt-3 flex flex-col gap-4">
+            {chats.map((user, index) => (
               <div className="flex items-center justify-between">
                 <div key={index} className=" flex items-center gap-3">
-                  <img
-                    src={user.avatar[0]}
-                    alt=""
-                    className="w-9 h-9 rounded-full  "
-                  />{" "}
-                  <p>{user.name}</p>
+                  <NameAvatar avatar={user.avatar[0]} name={user.name} />
                 </div>
-                {!members?.includes(user._id) && (
+
+                {!members?.includes(user.members[0]) && (
                   <div
                     className=" bg-blue-500 w-fit rounded-full hover:bg-blue-600 "
-                    onClick={() => handlerMemersAdd(user._id)}
+                    onClick={() => handlerMemersAdd(user.members[0])}
                   >
                     <IconButton className=" w-8 h-8 ">
                       <Add className=" text-white" />
                     </IconButton>
                   </div>
                 )}
-                {members?.includes(user._id) && (
+
+                {members?.includes(user.members[0]) && (
                   <div
                     className=" bg-red-500 w-fit rounded-full hover:bg-red-600 "
-                    onClick={() => handlerRemoveMembers(user._id)}
+                    onClick={() => handlerRemoveMembers(user.members[0])}
                   >
                     <IconButton className=" w-8 h-8 ">
                       <Remove className=" text-white" />

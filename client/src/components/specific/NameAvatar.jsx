@@ -1,6 +1,6 @@
 import React from "react";
 
-function NameAvatar({ avatar, name }) {
+function NameAvatar({ avatar, name }) {   
   return (
     <div className=" flex items-center gap-3">
       <img

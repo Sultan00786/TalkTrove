@@ -7,7 +7,9 @@ const {
   GET_CHAT_DETAILS,
   GET_MESSAGES,
   GET_GROUP_CHAT_LIST,
+  CREAT_NEW_GROUP,
   ADD_GROUP_MEMEBERS,
+  DELETE_GROUP,
   REMOVE_GROUP_MEMBER,
   RENAME_GROUP,
 } = chatApiUrl;
@@ -97,6 +99,18 @@ export const renameGroup = async (groupName, chatId, navigate) => {
   }
 };
 
+export const newGroupChat = async (data) => {
+  try {
+    const response = await apiConnector("POST", CREAT_NEW_GROUP, data);
+    if (response.data.message) toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data.message) toast.error(error.response.data.message);
+    return null;
+  }
+};
+
 export const addNewMembers = async (chatId, members) => {
   try {
     const response = await apiConnector("PUT", ADD_GROUP_MEMEBERS, {
@@ -105,6 +119,21 @@ export const addNewMembers = async (chatId, members) => {
     });
     console.log(response.data);
     if (response.data.message) toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data.message) toast.error(error.response.data.message);
+    return null;
+  }
+};
+
+export const deleteGroup = async (chatId, navigate) => {
+  try {
+    const response = await apiConnector("DELETE", DELETE_GROUP + `/${chatId}`);
+    if (response.data.message) {
+      toast.success(response.data.message);
+      navigate("/groups");
+    }
     return response.data;
   } catch (error) {
     console.error(error);
