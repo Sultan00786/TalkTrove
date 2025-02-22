@@ -15,20 +15,20 @@ import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
 import { socketAuthenticator } from "./middlewares/isAuthenticat.js";
 import {
-  createSampleChat,
-  createSampleGroupChat,
-  createSampleGroupMessage,
-  createSampleMessage,
+   createSampleChat,
+   createSampleGroupChat,
+   createSampleGroupMessage,
+   createSampleMessage,
 } from "./seeders/chat.js";
 import {
-  NEW_MESSAGE,
-  NEW_MESSAGE_ALERT,
-  NEW_REQUEST,
-  USER_ONLINE_STATUS,
+   NEW_MESSAGE,
+   NEW_MESSAGE_ALERT,
+   NEW_REQUEST,
+   USER_ONLINE_STATUS,
 } from "./constants/events.js";
 
 dotenv.config({
-  path: "./.env",
+   path: "./.env",
 });
 
 const port = process.env.PORT || 3000;
@@ -37,109 +37,113 @@ const mongoDbUrl = process.env.MONGODB_URI;
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST", "PUT"],
-    credentials: true,
-  },
+   cors: {
+      origin: process.env.CLIENT_URL,
+      methods: ["GET", "POST", "PUT"],
+      credentials: true,
+   },
 });
 let userSocketIds = new Map();
 let onlineUsers = [];
 const corsOptions = {
-  origin: process.env.CLIENT_URL,
-  credentials: true,
+   origin: process.env.CLIENT_URL,
+   credentials: true,
 };
 
 connectDB(mongoDbUrl);
 app.use(cookieParser());
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+   api_key: process.env.CLOUDINARY_API_KEY,
+   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+app.get("/", (req, res) => {
+   res.send("Hello");
+});
 
 app.use("/user", userRouter);
 app.use("/chat", chatRouter);
 app.use("/admin", adminRouter);
 
 io.use((socket, next) => {
-  cookieParser()(
-    socket.request,
-    socket.request.res,
-    async (err) => await socketAuthenticator(err, socket, next)
-  );
+   cookieParser()(
+      socket.request,
+      socket.request.res,
+      async (err) => await socketAuthenticator(err, socket, next)
+   );
 });
 
 io.on("connection", (socket) => {
-  const user = socket.user;
-  userSocketIds.set(user._id.toString(), socket.id);
-  onlineUsers = Array.from(userSocketIds.keys());
+   const user = socket.user;
+   userSocketIds.set(user._id.toString(), socket.id);
+   onlineUsers = Array.from(userSocketIds.keys());
 
-  // This event is get triggered when NEW_MESSAGE event get emit here becase of socket id's
-  socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
-    const messageForRealTime = {
-      content: message,
-      _id: uuid(),
-      sender: {
-        _id: user._id,
-        name: user.name,
-      },
-      chat: chatId,
-      createdAt: new Date().toISOString(),
-    };
-    const messageForDB = {
-      content: message,
-      sender: user._id,
-      chat: chatId,
-    };
+   // This event is get triggered when NEW_MESSAGE event get emit here becase of socket id's
+   socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
+      const messageForRealTime = {
+         content: message,
+         _id: uuid(),
+         sender: {
+            _id: user._id,
+            name: user.name,
+         },
+         chat: chatId,
+         createdAt: new Date().toISOString(),
+      };
+      const messageForDB = {
+         content: message,
+         sender: user._id,
+         chat: chatId,
+      };
 
-    // console.log(messageForRealTime);
-    // console.log(members);
+      // console.log(messageForRealTime);
+      // console.log(members);
 
-    let result = null;
-    try {
-      result = await Message.create(messageForDB)
-        .then((createdMessage) => {
-          return Message.populate(createdMessage, { path: "sender" });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+      let result = null;
+      try {
+         result = await Message.create(messageForDB)
+            .then((createdMessage) => {
+               return Message.populate(createdMessage, { path: "sender" });
+            })
+            .catch((err) => {
+               console.error(err);
+            });
+      } catch (error) {
+         console.log(error);
+      }
 
-    const onlineMembersSockets = getSockets(members);
-    io.to(onlineMembersSockets).emit(NEW_MESSAGE, {
-      data: result,
-    });
-    io.to(onlineMembersSockets).emit(NEW_MESSAGE_ALERT, { chatId });
-  });
+      const onlineMembersSockets = getSockets(members);
+      io.to(onlineMembersSockets).emit(NEW_MESSAGE, {
+         data: result,
+      });
+      io.to(onlineMembersSockets).emit(NEW_MESSAGE_ALERT, { chatId });
+   });
 
-  // USER_ONLINE_STATUS event emit from here
-  socket.emit(USER_ONLINE_STATUS, onlineUsers);
+   // USER_ONLINE_STATUS event emit from here
+   socket.emit(USER_ONLINE_STATUS, onlineUsers);
 
-  socket.on(NEW_REQUEST, (userId) => {
-    const socketIdOfReciver = [userSocketIds.get(userId)];
-    socket.to(socketIdOfReciver).emit(NEW_REQUEST, { isMsgRecieve: true });
-  });
+   socket.on(NEW_REQUEST, (userId) => {
+      const socketIdOfReciver = [userSocketIds.get(userId)];
+      socket.to(socketIdOfReciver).emit(NEW_REQUEST, { isMsgRecieve: true });
+   });
 
-  socket.on("disconnect", () => {
-    userSocketIds.delete(user._id.toString());
-    onlineUsers.filter((id) => id !== user._id.toString());
-  });
+   socket.on("disconnect", () => {
+      userSocketIds.delete(user._id.toString());
+      onlineUsers.filter((id) => id !== user._id.toString());
+   });
 });
 
 app.use(errorMiddleware);
 
 server.listen(port, () => {
-  console.log(
-    `Server is running on port ${port} in ${process.env.NODE_ENV.trim()} MODE`
-  );
+   console.log(
+      `Server is running on port ${port} in ${process.env.NODE_ENV} MODE`
+   );
 });
 
 export { userSocketIds };
