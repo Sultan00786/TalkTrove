@@ -26,6 +26,7 @@ import {
    NEW_REQUEST,
    USER_ONLINE_STATUS,
 } from "./constants/events.js";
+import axios from "axios";
 
 dotenv.config({
    path: "./.env",
@@ -62,7 +63,27 @@ cloudinary.config({
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.get("/", (req, res) => {
+const pingServer = () => {
+   axios
+      .get(process.env.PING_URL + "/ping")
+      .then((res) => {
+         if (!res) {
+            console.log("Fail to Ping Server");
+            return;
+         }
+         console.log(
+            `Server is Ping on ${new Date().toLocaleDateString()} --> ${new Date().toLocaleTimeString()}`
+         );
+         return {};
+      })
+      .catch((err) => {
+         console.log(err);
+      });
+};
+
+setInterval(pingServer, 1000 * 60 * 14);
+
+app.get("/ping", (req, res) => {
    res.send("Hello");
 });
 
