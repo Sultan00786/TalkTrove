@@ -121,6 +121,7 @@ function Chat({ chatId, members }) {
       >
         <div className=" w-full h-fit flex items-center gap-4 px-3 pt-6  ">
           <div className="w-full h-[50%] bg-gray-300 rounded-full p-1 px-2 flex items-center shadow-sm shadow-neutral-900 ">
+             
             <IconButton>
               <AttachFileIcon className=" text-gray-500 rotate-12" />
             </IconButton>
