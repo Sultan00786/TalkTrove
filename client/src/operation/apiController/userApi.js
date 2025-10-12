@@ -35,14 +35,18 @@ export const loginUser = async (data, dispatch, navigate) => {
   const toastId = toast.loading("Logging...");
   try {
     if (!data) throw new Error("Required data for login");
-    const response = await apiConnector("POST", USER_LOGIN, data)
+    const response = await apiConnector("POST", USER_LOGIN, data);
     if (!response) throw new Error(response);
 
     dispatch(setUser(response?.data?.userData));
     dispatch(setToken(response?.data?.token));
-
-    localStorage.setItem("user", JSON.stringify(response.data.userData));
-    localStorage.setItem("token", JSON.stringify(response.data.token));
+    const talkTrove = {
+      user: response?.data?.userData,
+      token: response?.data?.token,
+    };
+    // localStorage.setItem("user", JSON.stringify(response.data.userData));
+    // localStorage.setItem("token", JSON.stringify(response.data.token));
+    localStorage.setItem("talkTrove", JSON.stringify(talkTrove));
 
     toast.dismiss(toastId);
     toast.success("Logged in successfully");
