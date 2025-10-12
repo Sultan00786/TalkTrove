@@ -1,9 +1,8 @@
-import { json } from "react-router-dom";
+import toast from "react-hot-toast";
+import { NEW_REQUEST } from "../../constant/events";
 import { apiConnector } from "../apiConnect";
 import { userApiUrl } from "../apiUrl";
-import toast from "react-hot-toast";
 import { setToken, setUser } from "../reducer/userSlice";
-import { NEW_REQUEST } from "../../constant/events";
 
 const {
   NEW_USER_SIGN_UP,
@@ -36,7 +35,7 @@ export const loginUser = async (data, dispatch, navigate) => {
   const toastId = toast.loading("Logging...");
   try {
     if (!data) throw new Error("Required data for login");
-    const response = await apiConnector("POST", USER_LOGIN, data);
+    const response = await apiConnector("POST", USER_LOGIN, data)
     if (!response) throw new Error(response);
 
     dispatch(setUser(response?.data?.userData));

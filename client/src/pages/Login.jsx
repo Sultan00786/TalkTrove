@@ -1,14 +1,13 @@
-import React, { useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useForm } from "react-hook-form";
-import { Avatar, Button, TextField } from "@mui/material";
-import { loginUser, newUser } from "../operation/apiController/userApi";
-import toast from "react-hot-toast";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import { Avatar, Button, TextField } from "@mui/material";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { combineSlices } from "@reduxjs/toolkit";
+import { loginUser, newUser } from "../operation/apiController/userApi";
 
 function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -19,7 +18,6 @@ function Login() {
   const navigate = useNavigate();
 
   const {
-    setValue,
     getValues,
     register,
     handleSubmit,
@@ -50,8 +48,6 @@ function Login() {
     const data = getValues();
     console.log(data);
     dispatch(loginUser(data, dispatch, navigate));
-    const { user } = useSelector((state) => state.user);
-    console.log(user);
     e.preventDefault();
   };
 
