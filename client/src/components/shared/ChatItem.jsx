@@ -1,12 +1,11 @@
-import { Grow, Slide } from "@mui/material";
+import { Grow } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import AvatarCard from "./AvatarCard";
 import { NEW_MESSAGE_ALERT } from "../../constant/events";
 import { useSocketEvents } from "../../hooks/hooks";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { setNewMessageArr } from "../../operation/reducer/userSlice";
+import AvatarCard from "./AvatarCard";
 
 function ChatItem({
   avatar,
@@ -36,7 +35,10 @@ function ChatItem({
 
     let newArr = newMessageArr.filter((item) => item.chatId !== _id);
     dispatch(setNewMessageArr(newArr));
-    localStorage.setItem("newMessageArr", JSON.stringify(newArr));
+    let talkTrove = JSON.parse(localStorage.getItem("talkTrove"));
+    talkTrove = { ...talkTrove, newMessageArr: newArr };
+    localStorage.setItem("talkTrove", JSON.stringify(talkTrove));
+    // localStorage.setItem("newMessageArr", JSON.stringify(newArr));
     setNewMessageAlert(0);
   };
 
@@ -90,7 +92,10 @@ function ChatItem({
         dispatch(setNewMessageArr(newArr));
 
         // set newMessageArr in local storage
-        localStorage.setItem("newMessageArr", JSON.stringify(newArr));
+        let talkTrove = JSON.parse(localStorage.getItem("talkTrove"));
+        talkTrove = { ...talkTrove, newMessageArr: newArr };
+        localStorage.setItem("talkTrove", JSON.stringify(talkTrove));
+        // localStorage.setItem("newMessageArr", JSON.stringify(newArr));
       }
       // else if equal chat is opened then
       else {

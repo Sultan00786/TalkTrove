@@ -1,4 +1,12 @@
 import {
+  Add,
+  Group,
+  Logout,
+  Menu as MenuIcon,
+  Notifications,
+  Search,
+} from "@mui/icons-material";
+import {
   AppBar,
   Backdrop,
   Box,
@@ -7,33 +15,16 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { Suspense, lazy, useEffect, useState } from "react";
-import { orange } from "../constant/color";
-import {
-  Add,
-  Group,
-  Logout,
-  Menu as MenuIcon,
-  NotificationAdd,
-  Notifications,
-  Search,
-} from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setLoading,
-  setNOTIFICATION,
-  setToken,
-  setUser,
-} from "../../operation/reducer/userSlice";
-import { apiConnector } from "../../operation/apiConnect";
-import { userApiUrl } from "../../operation/apiUrl";
+import { useNavigate } from "react-router-dom";
+import { NEW_REQUEST } from "../../constant/events";
 import {
   getAllNotification,
   userLogout,
 } from "../../operation/apiController/userApi";
-import Loader from "./Loader";
-import { NEW_MESSAGE, NEW_REQUEST } from "../../constant/events";
+import { setNOTIFICATION } from "../../operation/reducer/userSlice";
+import { orange } from "../constant/color";
 
 const SearchDialog = lazy(() => import("../specific/SearchDialog"));
 const NewGroupDialog = lazy(() => import("../dialog/NewGroupDialog"));
@@ -77,8 +68,11 @@ const Header = () => {
 
   function handleNotification() {
     setIsNofication((prev) => !prev);
-    localStorage.removeItem("NOTIFICATION");
-    console.log(localStorage.getItem("NOTIFICATION"));
+    let talkTrove = JSON.parse(localStorage.getItem("talkTrove"));
+    talkTrove = { ...talkTrove, NOTIFICATION: false };
+    localStorage.setItem("talkTrove", JSON.stringify(talkTrove));
+    // localStorage.removeItem("NOTIFICATION");
+    console.log(localStorage.getItem(talkTrove.NOTIFICATION));
     dispatch(setNOTIFICATION(false));
   }
 
@@ -87,7 +81,11 @@ const Header = () => {
     socket.on(NEW_REQUEST, (data) => {
       console.log("NEW_REQUEST");
       console.log(data);
-      localStorage.setItem("NOTIFICATION", data.isMsgRecieve);
+      let talkTrove = JSON.parse(localStorage.getItem("talkTrove"));
+      talkTrove = { ...talkTrove, NOTIFICATION: data.isMsgRecieve };
+      localStorage.setItem("talkTrove", JSON.stringify(talkTrove));
+      // localStorage.setItem("NOTIFICATION", data.isMsgRecieve);
+
       dispatch(setNOTIFICATION(data.isMsgRecieve));
     });
   }, [socket]);

@@ -1,20 +1,17 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import { IconButton, InputBase } from "@mui/material";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { sampleMessage } from "../components/constant/sampleData";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import AppLayout from "../components/layout/AppLayout";
 import MessageAttachement from "../components/message/MessageAttachement";
 import MessageBox from "../components/message/MessageBox";
-import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "../constant/events";
+import { NEW_MESSAGE } from "../constant/events";
 import { useSocketEvents } from "../hooks/hooks";
 import { getOldMessages } from "../operation/apiController/chatApi";
-import { setLoading } from "../operation/reducer/userSlice";
 
 function Chat({ chatId, members }) {
   // const messages = sampleMessage;
-  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const userId = user?._id;
 
@@ -121,7 +118,6 @@ function Chat({ chatId, members }) {
       >
         <div className=" w-full h-fit flex items-center gap-4 px-3 pt-6  ">
           <div className="w-full h-[50%] bg-gray-300 rounded-full p-1 px-2 flex items-center shadow-sm shadow-neutral-900 ">
-             
             <IconButton>
               <AttachFileIcon className=" text-gray-500 rotate-12" />
             </IconButton>

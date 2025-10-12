@@ -1,20 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { set } from "react-hook-form";
-
+const talkTrove = JSON.parse(localStorage.getItem("talkTrove")) || {};
 const initialState = {
-  user: localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user"))
-    : null,
-  token: localStorage.getItem("token")
-    ? JSON.parse(localStorage.getItem("token"))
-    : null,
+  user: talkTrove.user ? talkTrove.user : null,
+  token: talkTrove.token ? talkTrove.token : null,
   userFriends: [],
   loading: false,
   toggle: false,
-  newMessageArr: localStorage.getItem("newMessageArr")
-    ? JSON.parse(localStorage.getItem("newMessageArr"))
-    : [],
-  NOTIFICATION: localStorage.getItem("NOTIFICATION") ? true : false,
+  newMessageArr: talkTrove.newMessageArr ? talkTrove.newMessageArr : [],
+  NOTIFICATION: talkTrove.NOTIFICATION ? talkTrove.NOTIFICATION : false,
 };
 
 const userSlice = createSlice({

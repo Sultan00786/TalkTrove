@@ -1,4 +1,3 @@
-import React from "react";
 import error404 from "../media/error/error404.png";
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
@@ -13,7 +12,7 @@ function NotFound() {
       <div className=" w-fit flex flex-col items-center">
         <img src={error404} className="h-[300px]" />
         <p className=" font-semibold text-xl mt-1">
-          THE PAGE YOU WERE LOOKING FOR DOESN'T EXIST
+          {"THE PAGE YOU WERE LOOKING FOR DOESN'T EXIST"}
         </p>
         <p className=" font-semibold text-gray-700">
           YOU MAY HAVE MISTYPED THE ADDRESS OF THE PAGE MAY HAVE MOVED

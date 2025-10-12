@@ -1,9 +1,8 @@
-import { json } from "react-router-dom";
+import toast from "react-hot-toast";
+import { NEW_REQUEST } from "../../constant/events";
 import { apiConnector } from "../apiConnect";
 import { userApiUrl } from "../apiUrl";
-import toast from "react-hot-toast";
 import { setToken, setUser } from "../reducer/userSlice";
-import { NEW_REQUEST } from "../../constant/events";
 
 const {
   NEW_USER_SIGN_UP,
@@ -41,9 +40,13 @@ export const loginUser = async (data, dispatch, navigate) => {
 
     dispatch(setUser(response?.data?.userData));
     dispatch(setToken(response?.data?.token));
-
-    localStorage.setItem("user", JSON.stringify(response.data.userData));
-    localStorage.setItem("token", JSON.stringify(response.data.token));
+    const talkTrove = {
+      user: response?.data?.userData,
+      token: response?.data?.token,
+    };
+    // localStorage.setItem("user", JSON.stringify(response.data.userData));
+    // localStorage.setItem("token", JSON.stringify(response.data.token));
+    localStorage.setItem("talkTrove", JSON.stringify(talkTrove));
 
     toast.dismiss(toastId);
     toast.success("Logged in successfully");
