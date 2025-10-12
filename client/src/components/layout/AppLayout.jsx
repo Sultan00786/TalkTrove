@@ -1,27 +1,26 @@
 import { Grid } from "@mui/material";
-import React, { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { io } from "socket.io-client";
 import {
   getAllUserChats,
   getChatDetails,
 } from "../../operation/apiController/chatApi";
 import { getUser } from "../../operation/apiController/userApi";
-import { sampleChats, sampleUser } from "../constant/sampleData";
+import { setSocket } from "../../operation/reducer/socketSlice";
+import { setLoading, setUserFriend } from "../../operation/reducer/userSlice";
 import GroupChatEditList from "../editGroup/GroupChatEditList";
 import Title from "../shared/Title";
 import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
 import Header from "./Header";
 import Loader from "./Loader";
-import { io } from "socket.io-client";
-import { setSocket } from "../../operation/reducer/socketSlice";
-import { setLoading, setUserFriend } from "../../operation/reducer/userSlice";
 
 const AppLayout =
   () =>
   (WrappedCommponent, isGroupEdit = false) => {
-    return (props) => {
+    const Component = (props) => {
       const dispatch = useDispatch();
       const navigate = useNavigate();
       const params = useParams();
@@ -166,6 +165,8 @@ const AppLayout =
         </div>
       );
     };
+
+    return Component;
   };
 
 export default AppLayout;
