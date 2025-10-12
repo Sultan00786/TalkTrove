@@ -1,4 +1,3 @@
-import React from "react";
 import AppLayout from "../components/layout/AppLayout";
 import { Typography } from "@mui/material";
 
