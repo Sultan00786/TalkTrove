@@ -45,6 +45,8 @@ const AppLayout =
           []
         )
       );
+      console.log(import.meta.env.VITE_BASE_SERVER)
+
       dispatch(setSocket(socket));
 
       const handleDeleteChat = (e, _id, groupChat) => {
