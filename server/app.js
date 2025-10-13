@@ -94,6 +94,7 @@ app.use("/chat", chatRouter);
 app.use("/admin", adminRouter);
 
 io.use((socket, next) => {
+  path: '/talktrove/socket.io',
   cookieParser()(
     socket.request,
     socket.request.res,
