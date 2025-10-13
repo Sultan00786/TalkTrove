@@ -36,17 +36,24 @@ const AppLayout =
 
       const chatId = params.chatId;
 
-      const socket = useMemo(() =>
-        io(
-          import.meta.env.VITE_BASE_SERVER,
-          {
+      // const socket = useMemo(() =>
+      //   io(
+      //     import.meta.env.VITE_BASE_SERVER,
+      //     {
+      //       withCredentials: true,
+      //     },
+      //     []
+      //   )
+      // );
+      const socket = useMemo(
+        () =>
+          io(import.meta.env.VITE_BASE_SERVER, {
             withCredentials: true,
-          },
-          []
-        )
+            path: "/talktrove/socket.io", // ← Add this!
+          }),
+        []
       );
       console.log(import.meta.env.VITE_BASE_SERVER)
-
       dispatch(setSocket(socket));
 
       const handleDeleteChat = (e, _id, groupChat) => {
