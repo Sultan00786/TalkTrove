@@ -38,6 +38,7 @@ const mongoDbUrl = process.env.MONGODB_URI;
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
+  path: '/talktrove/socket.io',
   cors: {
     origin: process.env.CLIENT_URL,
     methods: ["GET", "POST", "PUT"],
@@ -94,7 +95,6 @@ app.use("/chat", chatRouter);
 app.use("/admin", adminRouter);
 
 io.use((socket, next) => {
-  path: '/talktrove/socket.io',
   cookieParser()(
     socket.request,
     socket.request.res,
